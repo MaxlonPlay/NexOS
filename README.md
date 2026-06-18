@@ -124,6 +124,73 @@ journalctl -u nexos -f      # live logs
 
 ---
 
+## Configuration
+
+The configuration file is located at `/usr/lib/nexos/.env`. You can edit it manually and restart the service to apply changes.
+
+```bash
+nano /usr/lib/nexos/.env
+systemctl restart nexos
+```
+
+### TLS / HTTPS
+
+| Variable | Default | Description |
+|---|---|---|
+| `HTTPS_ENABLED` | `true` | Enable HTTPS |
+| `SECURE_COOKIES` | `true` | Mark session cookies as Secure (set to `false` for plain HTTP) |
+| `AUTO_SSL` | `true` | Auto-generate a self-signed certificate |
+| `SSL_CERTFILE` | — | Path to a custom certificate PEM file |
+| `SSL_KEYFILE` | — | Path to the matching private key PEM file |
+| `SSL_HOSTNAME` | — | Extra IPs or hostnames to include in the self-signed cert SAN |
+
+### Access control
+
+| Variable | Default | Description |
+|---|---|---|
+| `ALLOWED_ORIGINS` | *(any)* | Comma-separated hostnames or IPs allowed to connect; requests from unlisted hosts are rejected |
+| `TRUSTED_PROXY` | `false` | Set to `true` when running behind a reverse proxy (nginx, Caddy, Traefik) to trust `X-Forwarded-For` |
+
+### File manager
+
+| Variable | Default | Description |
+|---|---|---|
+| `FILE_ROOT` | `/` | Root path exposed in the file manager |
+| `FILE_ROOTS` | — | Alternative to `FILE_ROOT`: comma-separated list of paths for multi-root mode |
+| `FILE_MANAGER_PROTECTION` | `strict` | `strict` blocks writes to system paths; `permissive` allows editing anywhere under the root |
+
+### Downloads
+
+| Variable | Default | Description |
+|---|---|---|
+| `DOWNLOAD_SAVE_PATH` | `/var/lib/nexos/downloads` | Default save directory for downloads |
+| `DOWNLOAD_MAX_CONCURRENT` | `4` | Maximum simultaneous downloads |
+| `DOWNLOAD_MAX_CONNECTIONS` | `4` | Maximum connections per download |
+
+### Terminal
+
+| Variable | Default | Description |
+|---|---|---|
+| `CONSOLE_SHELL` | `/bin/bash` | Shell to launch in the browser terminal |
+| `CONSOLE_IDLE_TIMEOUT` | `1800` | Seconds of inactivity before the session is closed |
+| `CONSOLE_MAX_SESSION` | `3600` | Maximum session lifetime in seconds |
+| `CONSOLE_TOKEN_REVALIDATION` | `60` | How often (in seconds) the session token is re-checked |
+
+### Paths
+
+| Variable | Default | Description |
+|---|---|---|
+| `NEXOS_DATA_DIR` | `/var/lib/nexos` | Directory for the database, scripts, and runtime data |
+| `NFS_EXPORTS_FILE` | `/etc/exports` | Path to the NFS exports file |
+
+### Security
+
+| Variable | Description |
+|---|---|
+| `DATA_ENCRYPTION_KEY` | Fernet key used to encrypt sensitive database fields (2FA secrets, credentials). **Do not lose or change this key** — doing so will make all encrypted data permanently unreadable. Back it up alongside your database. |
+
+---
+
 ## Reinstalling or reconfiguring
 
 Running the installer again on an existing installation will walk through the same wizard while preserving your current values — press Enter to keep any setting unchanged. Your database and encryption key are never touched during a reinstall.
