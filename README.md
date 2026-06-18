@@ -1,4 +1,4 @@
-# NexOS
+# <img src="logo.png" alt="NexOS" width="32" style="vertical-align:middle"> NexOS
 
 A web-based management interface for Linux systems with ZFS storage. NexOS lets you administer your server entirely from a browser — no command line required.
 
