@@ -91,7 +91,7 @@ cd nexos
 **3. Run the installer**
 
 ```bash
-sudo python3 installer.py
+./install
 ```
 
 The installer will guide you through a short wizard:
