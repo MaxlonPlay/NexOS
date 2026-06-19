@@ -81,6 +81,10 @@ Optional:
 
 Go to the [Releases](../../releases/latest) page and download `nexos.tar.gz`.
 
+```bash
+wget https://github.com/MaxlonPlay/NexOS/releases/download/latest/nexos.tar.gz
+```
+
 **2. Extract**
 
 ```bash
