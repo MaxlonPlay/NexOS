@@ -55,8 +55,8 @@ NexOS is built with security as a first-class requirement.
 | Proxmox VE 7+ | ✅ Tested |
 | Debian 11+ | ✅ Tested |
 | Ubuntu 22.04+ | ✅ Tested |
-| Fedora 39+ | ✅ Compatible |
-| Arch Linux | ✅ Compatible |
+| Fedora 39+ | ✅ Potentially compatible |
+| Arch Linux | ✅ Potentially compatible |
 
 Any Linux distribution with systemd and OpenZFS should work.
 
