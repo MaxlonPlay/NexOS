@@ -31,8 +31,7 @@ x-nexos:
     - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/screenshot-1.png
     - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/screenshot-2.png
   tagline:
-    en_US: Integration of various PVR applications
-
+    en: Integration of various PVR applications
   thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/thumbnail.png
   website: "https://prowlarr.com"
   repo: "https://github.com/Prowlarr/Prowlarr"
