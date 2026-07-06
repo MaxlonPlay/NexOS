@@ -1,6 +1,6 @@
 name: prowlarr
 services:
-  prowlarr:
+  Prowlarr:
     environment:
       PGID: "1000"
       PUID: "1000"
