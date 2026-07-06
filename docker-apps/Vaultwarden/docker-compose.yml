@@ -5,7 +5,7 @@
       Gestione password self-hosted, leggero e completo.
       Supporta app mobile, browser extension e desktop client.
     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vaultwarden.svg
-    thumbnail: https://www.rosehosting.com/vaultwarden-hosting/?srsltid=AfmBOorXpYfrvMSq3xfdRT8B4BaE50DRfSPAxJKK4R1t6i3ks673QiDp
+    thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Vaultwarden/thumbnail.png
     category: sicurezza
     env:
       - name: ADMIN_TOKEN
