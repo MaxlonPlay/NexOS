@@ -1,60 +1,35 @@
-name: linuxserver-deluge
-services:
-  app:
-    image: linuxserver/deluge:2.2.0
-    restart: unless-stopped
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
-      DELUGE_LOGLEVEL: ''
-    x-casaos:
-      envs:
-        - container: PUID
-          description:
-            en_us: Run 'id [USER]' for the owner of the host volume directories to get the UID to use here.
-        - container: PGID
-          description:
-            en_us: Run 'id [USER]' for the owner of the host volume directories to get the GID to use here.
-        - container: TZ
-          description:
-            en_us: specify a timezone to use, see this list.
-        - container: DELUGE_LOGLEVEL
-          description:
-            en_us: set the loglevel output when running Deluge, default is info for deluged and warning for delgued-web [OPTIONAL]
-    ports:
-      - target: 8112
-        published: 8112
-        protocol: tcp
-      - target: 6881
-        published: 6881
-        protocol: tcp
-      - target: 6881
-        published: 6881
-        protocol: udp
-      - target: 58846
-        published: 58846
-        protocol: tcp
+  x-nexos:
+    name: Vaultwarden
+    description: |
+      Server compatibile con i client Bitwarden ufficiali.
+      Gestione password self-hosted, leggero e completo.
+      Supporta app mobile, browser extension e desktop client.
+    icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vaultwarden.svg
+    thumbnail: https://raw.githubusercontent.com/dani-garcia/vaultwarden/main/resources/screenshots/admin-panel.png
+    category: sicurezza
+    env:
+      - name: ADMIN_TOKEN
+        description: Token Argon2id per il pannello /admin
+        required: true
+        sensitive: true
+        hint: |
+          Genera con il comando:
+          echo -n 'LA_TUA_PASSWORD' | argon2 $(openssl rand -hex 8) -e
+          Lascia vuoto per disabilitare il pannello admin.
     volumes:
-      - type: bind
-        source: /DATA/AppData/deluge/config
-        target: /config
-      - type: bind
-        source: /DATA/AppData/deluge/downloads
-        target: /downloads
-x-casaos:
-  architectures:
-    - amd64
-    - arm64
-  main: app
-  description:
-    en_us: Deluge is a lightweight, Free Software, cross-platform BitTorrent client. * Full Encryption * WebUI * Plugin System * Much more...
-  tagline:
-    en_us: A lightweight, Free Software, cross-platform BitTorrent client. * Full Encryption * WebUI * Plugin System * Much more. . .
-  developer: LinuxServer.io
-  author: WisdomSky
-  icon: https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/deluge-logo.png
-  thumbnail: https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/deluge-logo.png
-  title:
-    en_us: Deluge
-  category: LinuxServer.io
+      - container: /data/
+        description: Directory principale dati (database, allegati, chiavi RSA)
+        required: true
+        
+  services:
+    server:
+      image: vaultwarden/server:latest
+      container_name: vaultwarden
+      restart: always
+      ports:
+        - "6821:80"
+      environment:
+        - ADMIN_TOKEN=???
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - ???:/data/
