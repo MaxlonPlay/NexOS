@@ -11,7 +11,7 @@ services:
       - ???:/config
     restart: always
 
-x-casaos:
+x-nexos:
   architectures:
     - amd64
     - arm64
