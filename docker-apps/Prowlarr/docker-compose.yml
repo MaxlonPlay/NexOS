@@ -1,22 +1,22 @@
-  services:
-    prowlarr:
-      image: lscr.io/linuxserver/prowlarr:latest
-      container_name: Prowlarr
-      environment:
-        - PUID=???
-        - PGID=???
-        - TZ=???
-      volumes:
-        - ???:/config
-      restart: always
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: Prowlarr
+    environment:
+      - PUID=???
+      - PGID=???
+      - TZ=???
+    volumes:
+      - ???:/config
+    restart: always
 
-  x-casaos:
-    architectures:
-      - amd64
-      - arm64
-    main: prowlarr
-    author: NexOS Team
-    category: Media
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: prowlarr
+  author: NexOS Team
+  category: Media
   description:
     en: Prowlarr is an indexer manager/proxy built on the popular *arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports management of both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Lidarr, Mylar3, Radarr, Readarr, and Sonarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
     de: Prowlarr ist ein Indexmanager / Proxy, der auf der beliebten * arr .net / reactjs-Grundstapelbasis für die Integration mit Ihren verschiedenen PVR-Apps entwickelt wurde. Prowlarr unterstützt die Verwaltung von Torrent-Trackern und Usenet-Indexern. Es integriert sich nahtlos in Lidarr, Mylar3, Radarr, Readarr und Sonarr und bietet eine vollständige Verwaltung Ihrer Indexer ohne eine Indexer-Einstellung pro App (wir machen alles).
@@ -24,13 +24,16 @@
     fr: Prowlarr est un gestionnaire d'index / proxy construit sur la base de pile populaire .net / reactjs * arr pour s'intégrer à vos différentes applications PVR. Prowlarr prend en charge la gestion des trackers Torrent et des indexeurs Usenet. Il s'intègre sans problème à Lidarr, Mylar3, Radarr, Readarr et Sonarr, offrant une gestion complète de vos indexeurs sans configuration d'indexeur par application (nous faisons tout).
     it: Prowlarr è un gestore di indici / proxy costruito sulla popolare base di stack .net / reactjs * arr per integrarsi con le varie applicazioni PVR. Prowlarr supporta la gestione di Torrent Trackers e Usenet Indexers. Si integra perfettamente con Lidarr, Mylar3, Radarr, Readarr e Sonarr, offrendo un'intera gestione degli indexer senza configurazione di indexer per applicazione (lo facciamo tutto).
     pt: O Prowlarr é um gerenciador de índices / proxy construído na base de pilha popular .net / reactjs * arr para integração com suas várias aplicações PVR. O Prowlarr suporta a gestão de Torrent Trackers e Usenet Indexers. Ele se integra perfeitamente com Lidarr, Mylar3, Radarr, Readarr e Sonarr, oferecendo gerenciamento completo de seus indexadores sem configuração de indexador por aplicativo (fazemos tudo).
-    developer: Prowlarr Team
-    icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/icon.svg
-    screenshot_link:
-      - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/screenshot-1.png
-      - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/screenshot-2.png
-    thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/thumbnail.png
-    website: "https://prowlarr.com"
-    repo: "https://github.com/Prowlarr/Prowlarr"
-    support: "https://wiki.servarr.com/prowlarr/troubleshooting"
-    docs: "https://wiki.servarr.com/prowlarr"
+  developer: Prowlarr Team
+  icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/icon.svg
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/screenshot-2.png
+  tagline:
+    en_US: Integration of various PVR applications
+
+  thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/thumbnail.png
+  website: "https://prowlarr.com"
+  repo: "https://github.com/Prowlarr/Prowlarr"
+  support: "https://wiki.servarr.com/prowlarr/troubleshooting"
+  docs: "https://wiki.servarr.com/prowlarr"
