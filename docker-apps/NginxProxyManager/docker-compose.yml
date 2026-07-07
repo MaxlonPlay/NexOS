@@ -20,7 +20,7 @@ x-nexos:
       Credenziali predefinite al primo accesso:
         Email:    admin@example.com
         Password: changeme
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/nginx-proxy-manager.webp
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nginx-proxy-manager.svg
   category: Network
   tags:
     - proxy
