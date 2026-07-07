@@ -1,0 +1,89 @@
+x-nexos:
+  name: Docmost
+  tagline: Wiki collaborativa e knowledge base self-hosted
+  description:
+    it: Docmost è una piattaforma wiki collaborativa open-source, alternativa moderna a Notion e Confluence. Supporta editor ricco, spazi di lavoro, permessi granulari e commenti.
+    en: Docmost is an open-source collaborative wiki platform, modern alternative to Notion and Confluence. Supports rich editor, workspaces, granular permissions and comments.
+  icon: https://avatars.githubusercontent.com/u/153452530
+  category: Produttività
+  developer: Docmost
+  version: latest
+  license: AGPL-3.0
+  port: 3000
+  website: https://docmost.com
+  repo: https://github.com/docmost/docmost
+  env:
+    - name: APP_URL
+      description: URL pubblico dell'app (es. https://wiki.tuodominio.com)
+      required: true
+    - name: APP_SECRET
+      description: Chiave segreta dell'applicazione
+      hint: |
+        Genera con: openssl rand -hex 32
+      sensitive: true
+      required: true
+    - name: SMTP_HOST
+      description: Host SMTP per l'invio email (opzionale)
+      required: false
+    - name: SMTP_USERNAME
+      description: Username SMTP / indirizzo mittente
+      required: false
+    - name: SMTP_PASSWORD
+      description: Password SMTP
+      sensitive: true
+      required: false
+    - name: MAIL_FROM_ADDRESS
+      description: Indirizzo email mittente
+      required: false
+    - name: MAIL_FROM_NAME
+      description: Nome mittente delle email
+      required: false
+      default: Docmost
+
+version: "3"
+
+services:
+  docmost:
+    image: docmost/docmost:latest
+    depends_on:
+      - db
+      - redis
+    environment:
+      - APP_URL=???
+      - APP_SECRET=???
+      - DATABASE_URL=postgresql://docmost:nexos_db_secret@db:5432/docmost?schema=public
+      - REDIS_URL=redis://redis:6379
+      - MAIL_DRIVER=smtp
+      - SMTP_HOST=
+      - SMTP_PORT=587
+      - SMTP_USERNAME=
+      - SMTP_PASSWORD=
+      - MAIL_FROM_ADDRESS=
+      - MAIL_FROM_NAME=Docmost
+      - DISABLE_TELEMETRY=true
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - docmost_storage:/app/data/storage
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=docmost
+      - POSTGRES_USER=docmost
+      - POSTGRES_PASSWORD=nexos_db_secret
+    restart: unless-stopped
+    volumes:
+      - docmost_db:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    volumes:
+      - docmost_redis:/data
+
+volumes:
+  docmost_storage:
+  docmost_db:
+  docmost_redis:
