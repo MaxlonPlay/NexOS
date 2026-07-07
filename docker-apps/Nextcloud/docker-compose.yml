@@ -1,0 +1,46 @@
+x-nexos:
+  name: Nextcloud AIO
+  tagline: Cloud personale completo con documenti, foto, calendario e molto altro
+  description:
+    it: Nextcloud All-in-One è la soluzione ufficiale per un cloud privato completo. Include file, documenti Office, calendario, contatti, videochiamante e decine di app aggiuntive — tutto in un unico container che gestisce automaticamente tutti i servizi interni.
+    en: Nextcloud All-in-One is the official solution for a complete private cloud. Includes files, Office documents, calendar, contacts, video calls and dozens of additional apps — all in a single container that automatically manages all internal services.
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/nextcloud.webp
+  category: Cloud & Storage
+  developer: Nextcloud GmbH
+  version: latest
+  license: AGPL-3.0
+  port: 8080
+  website: https://nextcloud.com
+  repo: https://github.com/nextcloud/all-in-one
+  docs: https://github.com/nextcloud/all-in-one#how-to-use-this
+  volumes:
+    - container: /mnt/docker-aio-config
+      description: Configurazione Nextcloud AIO
+      required: true
+  env:
+    - name: AIO_HTTP_PORT
+      description: Porta HTTP per l'interfaccia di amministrazione AIO
+      required: true
+      default: "8080"
+    - name: NEXTCLOUD_DATADIR
+      description: Percorso host dove Nextcloud salva i file degli utenti
+      hint: Scegli una cartella su un disco capiente. Es. /mnt/storage/nextcloud/data
+      required: true
+
+version: "3.8"
+
+services:
+  nextcloud-aio-mastercontainer:
+    image: ghcr.io/nextcloud-releases/all-in-one:latest
+    container_name: nextcloud-aio-mastercontainer
+    restart: always
+    ports:
+      - "${AIO_HTTP_PORT}:8080"
+    environment:
+      - APACHE_PORT=11000
+      - APACHE_IP_BINDING=0.0.0.0
+      - SKIP_DOMAIN_VALIDATION=true
+      - NEXTCLOUD_DATADIR=???
+    volumes:
+      - ???:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
