@@ -5,6 +5,11 @@ x-nexos:
     it: Nextcloud All-in-One è la soluzione ufficiale per un cloud privato completo. Include file, documenti Office, calendario, contatti, videochiamate e decine di app aggiuntive — tutto in un unico container che gestisce automaticamente tutti i servizi interni.
     en: Nextcloud All-in-One is the official solution for a complete private cloud. Includes files, Office documents, calendar, contacts, video calls and dozens of additional apps — all in a single container that automatically manages all internal services.
   icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/nextcloud.svg
+  screenshot_link:
+    - https://nextcloud.com/c/uploads/2026/06/hub26-spring-desktop-clients.jpg
+    - https://nextcloud.com/c/uploads/2026/06/Hub26-Spring-Accessibility-appearance.jpg
+    - https://nextcloud.com/c/uploads/2026/06/Hub26-spring-File-versioning.jpg
+    - https://nextcloud.com/c/uploads/2026/06/Nextcloud-iOS-app.png
   category: Cloud & Storage
   developer: Nextcloud GmbH
   version: latest
