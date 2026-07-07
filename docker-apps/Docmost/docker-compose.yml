@@ -12,6 +12,16 @@ x-nexos:
   port: 3000
   website: https://docmost.com
   repo: https://github.com/docmost/docmost
+  volumes:
+    - container: /app/data/storage
+      description: Dati e allegati di Docmost
+      required: true
+    - container: /var/lib/postgresql/data
+      description: Database PostgreSQL
+      required: true
+    - container: /data
+      description: Dati Redis (cache)
+      required: false
   env:
     - name: HOST_PORT
       description: Porta host su cui esporre Docmost
@@ -69,7 +79,7 @@ services:
       - "${HOST_PORT}:3000"
     restart: unless-stopped
     volumes:
-      - docmost_storage:/app/data/storage
+      - ???:/app/data/storage
 
   db:
     image: postgres:16-alpine
@@ -79,15 +89,10 @@ services:
       - POSTGRES_PASSWORD=nexos_db_secret
     restart: unless-stopped
     volumes:
-      - docmost_db:/var/lib/postgresql/data
+      - ???:/var/lib/postgresql/data
 
   redis:
     image: redis:7.2-alpine
     restart: unless-stopped
     volumes:
-      - docmost_redis:/data
-
-volumes:
-  docmost_storage:
-  docmost_db:
-  docmost_redis:
+      - ???:/data
