@@ -28,7 +28,8 @@ x-nexos:
       required: true
       default: "3000"
     - name: APP_URL
-      description: URL pubblico dell'app (es. https://wiki.tuodominio.com)
+      description: URL pubblico completo con protocollo (es. https://wiki.tuodominio.com)
+      hint: Deve iniziare con http:// o https:// altrimenti l'app non si avvia.
       required: true
     - name: APP_SECRET
       description: Chiave segreta dell'applicazione
