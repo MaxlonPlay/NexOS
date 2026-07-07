@@ -6,7 +6,7 @@ x-nexos:
   description:
     en: Apache Guacamole lets you access remote machines (RDP, VNC, SSH) through any HTML5 browser — no client software needed. This all-in-one image bundles the web app, the native proxy daemon and the database in a single container. After install open http://YOUR_IP:PORT/guacamole and log in with guacadmin / guacadmin — change the password immediately.
     it: Apache Guacamole permette di accedere a macchine remote (RDP, VNC, SSH) da qualsiasi browser HTML5 senza installare client. Questa immagine all-in-one include webapp, daemon proxy e database in un unico container. Dopo l'installazione apri http://TUO_IP:PORT/guacamole e accedi con guacadmin / guacadmin — cambia subito la password.
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/guacamole-light.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/guacamole-light.webp
   category: Remote Access
   tags:
     - remote desktop
