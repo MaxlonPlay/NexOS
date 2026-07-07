@@ -25,6 +25,7 @@ x-nexos:
     - name: NEXTCLOUD_DATADIR
       description: Percorso host dove Nextcloud salva i file degli utenti
       hint: Scegli una cartella su un disco capiente. Es. /mnt/storage/nextcloud/data
+      path: true
       required: true
 
 version: "3.8"
