@@ -20,7 +20,7 @@ x-nexos:
       Credenziali predefinite al primo accesso:
         Email:    admin@example.com
         Password: changeme
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nginx-proxy-manager.svg
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/nginx-proxy-manager.webp
   category: Network
   tags:
     - proxy
@@ -39,6 +39,11 @@ x-nexos:
   website: https://nginxproxymanager.com
   repo: https://github.com/NginxProxyManager/nginx-proxy-manager
   docs: https://nginxproxymanager.com/guide/
+  screenshots:
+    - https://nginxproxymanager.com/screenshots/proxy-hosts.png
+    - https://nginxproxymanager.com/screenshots/proxy-hosts-add.png
+    - https://nginxproxymanager.com/screenshots/redirection-hosts.png
+    - https://nginxproxymanager.com/screenshots/certificates.png
   env:
     - name: ADMIN_PORT
       description: Admin web UI port
