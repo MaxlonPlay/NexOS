@@ -35,7 +35,7 @@ x-nexos:
     - name: APP_URL
       description: Full public URL including protocol (e.g. https://wiki.yourdomain.com)
       type: url
-      required: true
+      required: false
       hint: Must start with http:// or https:// — the app will not start without a valid URL.
     - name: APP_SECRET
       description: Application secret key (used for sessions and encryption)
@@ -86,7 +86,7 @@ services:
       - db
       - redis
     environment:
-      - APP_URL=???
+      - APP_URL=
       - APP_SECRET=???
       - DATABASE_URL=postgresql://docmost:nexos_db_secret@db:5432/docmost?schema=public
       - REDIS_URL=redis://redis:6379
