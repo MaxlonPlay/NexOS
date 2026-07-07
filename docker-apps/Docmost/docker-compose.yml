@@ -1,59 +1,81 @@
 x-nexos:
   name: Docmost
-  tagline: Wiki collaborativa e knowledge base self-hosted
+  tagline:
+    en: Collaborative wiki and self-hosted knowledge base
+    it: Wiki collaborativa e knowledge base self-hosted
   description:
-    it: Docmost è una piattaforma wiki collaborativa open-source, alternativa moderna a Notion e Confluence. Supporta editor ricco, spazi di lavoro, permessi granulari e commenti.
-    en: Docmost is an open-source collaborative wiki platform, modern alternative to Notion and Confluence. Supports rich editor, workspaces, granular permissions and comments.
+    en: Docmost is an open-source collaborative wiki and documentation platform — a modern alternative to Notion and Confluence. Features a rich-text editor, workspaces, granular permissions, inline comments, nested pages and real-time collaboration.
+    it: Docmost è una piattaforma wiki e documentazione collaborativa open-source — alternativa moderna a Notion e Confluence. Include editor ricco, spazi di lavoro, permessi granulari, commenti inline, pagine annidate e collaborazione in tempo reale.
   icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/docmost.webp
-  category: Produttività
+  category: Productivity
+  tags:
+    - wiki
+    - documentation
+    - knowledge base
+    - notion alternative
+    - collaboration
   developer: Docmost
   version: latest
   license: AGPL-3.0
   port: 3000
+  arch:
+    - amd64
+    - arm64
   website: https://docmost.com
   repo: https://github.com/docmost/docmost
-  volumes:
-    - container: /app/data/storage
-      description: Dati e allegati di Docmost
-      required: true
-    - container: /var/lib/postgresql/data
-      description: Database PostgreSQL
-      required: true
-    - container: /data
-      description: Dati Redis (cache)
-      required: false
+  docs: https://docmost.com/docs
   env:
     - name: HOST_PORT
-      description: Porta host su cui esporre Docmost
+      description: Host port to expose Docmost on
       required: true
       default: "3000"
+      type: number
+      min: 1
+      max: 65535
     - name: APP_URL
-      description: URL pubblico completo con protocollo (es. https://wiki.tuodominio.com)
-      hint: Deve iniziare con http:// o https:// altrimenti l'app non si avvia.
+      description: Full public URL including protocol (e.g. https://wiki.yourdomain.com)
+      type: url
       required: true
+      hint: Must start with http:// or https:// — the app will not start without a valid URL.
     - name: APP_SECRET
-      description: Chiave segreta dell'applicazione
-      hint: |
-        Genera con: openssl rand -hex 32
+      description: Application secret key (used for sessions and encryption)
       sensitive: true
       required: true
+      hint: |
+        Generate with: openssl rand -hex 32
     - name: SMTP_HOST
-      description: Host SMTP per l'invio email (opzionale)
+      description: SMTP server hostname for outgoing email (optional)
       required: false
+      group: Email
     - name: SMTP_USERNAME
-      description: Username SMTP / indirizzo mittente
+      description: SMTP username or sender email address
       required: false
+      group: Email
     - name: SMTP_PASSWORD
-      description: Password SMTP
+      description: SMTP password
       sensitive: true
       required: false
+      group: Email
     - name: MAIL_FROM_ADDRESS
-      description: Indirizzo email mittente
+      description: From address used in outgoing emails
+      type: email
       required: false
+      group: Email
     - name: MAIL_FROM_NAME
-      description: Nome mittente delle email
+      description: Display name for outgoing emails
       required: false
       default: Docmost
+      group: Email
+  volumes:
+    - container: /app/data/storage
+      description: Docmost uploads and attachments
+      required: true
+    - container: /var/lib/postgresql/data
+      description: PostgreSQL database
+      required: true
+    - container: /data
+      description: Redis cache data
+      required: false
 
 version: "3"
 

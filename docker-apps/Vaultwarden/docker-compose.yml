@@ -1,40 +1,62 @@
-  services:
-    vaultwarden:
-      image: vaultwarden/server:latest
-      container_name: vaultwarden
-      restart: always
-      ports:
-        - "6821:80"
-      environment:
-        - ADMIN_TOKEN=???
-      volumes:
-        - /etc/localtime:/etc/localtime:ro
-        - ???:/data/
- 
-  x-nexos:
-    name: Vaultwarden
-    description: |
-      Server compatibile con i client Bitwarden ufficiali.
-      Gestione password self-hosted, leggero e completo.
-      Supporta app mobile, browser extension e desktop client.
-    icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vaultwarden.svg
-    thumbnail: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vaultwarden.png
-    screenshots:
-      - https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vaultwarden.png
-      - https://raw.githubusercontent.com/dani-garcia/vaultwarden/main/resources/screenshots/vault.png
-    tagline: 
-      it: Self-hosted password manager compatibile con Bitwarden
-    category: sicurezza
-    developer: dani-garcia
-    env:
-      - name: ADMIN_TOKEN
-        description: Token Argon2id per il pannello /admin
-        required: true
-        sensitive: true
-        hint: |
-          Genera con il comando:
-          echo -n 'LA_TUA_PASSWORD' | argon2 $(openssl rand -hex 8) -e
+x-nexos:
+  name: Vaultwarden
+  tagline:
+    en: Lightweight self-hosted password manager compatible with Bitwarden
+    it: Password manager self-hosted leggero compatibile con Bitwarden
+  description:
+    en: Vaultwarden is an unofficial Bitwarden server implementation written in Rust. It is fully compatible with all official Bitwarden clients (mobile, browser extension, desktop) while being much lighter on resources than the official server. Supports organizations, 2FA, attachments and the admin panel.
+    it: Vaultwarden è un'implementazione non ufficiale del server Bitwarden scritta in Rust. È completamente compatibile con tutti i client ufficiali Bitwarden (mobile, estensione browser, desktop) ma molto più leggero del server ufficiale. Supporta organizzazioni, 2FA, allegati e pannello admin.
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/vaultwarden.svg
+  thumbnail: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vaultwarden.png
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vaultwarden.png
+  category: Security
+  tags:
+    - password manager
+    - bitwarden
+    - security
+    - 2fa
+  developer: dani-garcia
+  version: latest
+  license: AGPL-3.0
+  port: 80
+  arch:
+    - amd64
+    - arm64
+    - arm/v7
+  website: https://github.com/dani-garcia/vaultwarden
+  repo: https://github.com/dani-garcia/vaultwarden
+  docs: https://github.com/dani-garcia/vaultwarden/wiki
+  env:
+    - name: HOST_PORT
+      description: Host port to expose Vaultwarden on
+      required: true
+      default: "6821"
+      type: number
+      min: 1
+      max: 65535
+    - name: ADMIN_TOKEN
+      description: Token for the /admin panel (Argon2id hash recommended)
+      required: true
+      sensitive: true
+      hint: |
+        Generate a secure token with:
+        echo -n 'YOUR_PASSWORD' | argon2 $(openssl rand -hex 8) -e
+        Leave empty to disable the admin panel.
+  volumes:
+    - container: /data
+      description: Vaultwarden data directory (vault, attachments, database)
+      required: true
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT}:80"
+    environment:
+      - ADMIN_TOKEN=???
     volumes:
-      - container: /data/
-        description: Directory principale dati
-        required: true
+      - /etc/localtime:/etc/localtime:ro
+      - ???:/data
