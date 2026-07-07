@@ -10,6 +10,8 @@ x-nexos:
   thumbnail: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vaultwarden.png
   screenshot_link:
     - https://getumbrel.github.io/umbrel-apps-gallery/vaultwarden/1.jpg
+    - https://getumbrel.github.io/umbrel-apps-gallery/vaultwarden/2.jpg
+    - https://getumbrel.github.io/umbrel-apps-gallery/vaultwarden/3.jpg
   category: Security
   tags:
     - password manager
