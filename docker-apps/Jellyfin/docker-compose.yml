@@ -1,0 +1,130 @@
+x-nexos:
+  name: Jellyfin
+  tagline:
+    en: Free media server with iGPU hardware transcoding
+    it: Media server libero con transcodifica hardware via iGPU
+  description:
+    en: Jellyfin is a free and open-source media server that puts you in control of your movies, TV shows and music. It supports hardware-accelerated transcoding via Intel/AMD iGPU (VAAPI / Quick Sync) so streams transcode in real time without taxing the CPU. Configure the acceleration type from the admin panel under Dashboard → Playback → Transcoding.
+    it: Jellyfin è un media server libero e open-source per film, serie TV e musica. Supporta la transcodifica hardware via Intel/AMD iGPU (VAAPI / Quick Sync) per convertire i flussi in tempo reale senza caricare la CPU. Il tipo di accelerazione si configura dal pannello admin in Dashboard → Riproduzione → Transcodifica.
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/jellyfin.svg
+  thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/thumbnail.png
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/screenshot-3.png
+  category: Media
+  tags:
+    - media
+    - streaming
+    - movies
+    - tv shows
+    - music
+    - transcoding
+    - hardware acceleration
+    - dlna
+  developer: Jellyfin Team
+  version: latest
+  license: GPL-2.0
+  port: 8096
+  arch:
+    - amd64
+    - arm64
+  ports:
+    - port: 8096
+      description: Web interface / API
+      protocol: tcp
+    - port: 7359
+      description: Client auto-discovery
+      protocol: udp
+    - port: 1900
+      description: DLNA server discovery
+      protocol: udp
+  website: https://jellyfin.org
+  repo: https://github.com/jellyfin/jellyfin
+  docs: https://jellyfin.org/docs
+  env:
+    - name: HOST_PORT
+      description: Host port for the Jellyfin web interface
+      required: true
+      default: "8096"
+      type: number
+      min: 1
+      max: 65535
+    - name: PUID
+      description: UID of the user that owns your media files
+      required: false
+      default: "1000"
+      type: number
+    - name: PGID
+      description: GID of the user that owns your media files
+      required: false
+      default: "1000"
+      type: number
+    - name: TZ
+      description: Timezone (e.g. Europe/Rome)
+      required: false
+      default: Europe/Rome
+      placeholder: Europe/Rome
+    - name: JELLYFIN_PublishedServerUrl
+      description: Public URL shown to clients — needed only behind a reverse proxy
+      type: url
+      required: false
+      placeholder: https://jellyfin.yourdomain.com
+    - name: RENDER_GID
+      description: GID of the 'render' group on the host — required for iGPU access
+      required: false
+      default: "103"
+      type: number
+      hint: |
+        Find the correct GID on your server with:
+          getent group render | cut -d: -f3
+        Common values: 103 (Debian/Ubuntu), 105 (some distros).
+        Leave empty and disable HW acceleration in Jellyfin admin if your host
+        has no /dev/dri (e.g. a system without an iGPU).
+        NVIDIA GPU requires a different setup (nvidia-container-toolkit).
+  volumes:
+    - container: /config
+      description: Jellyfin configuration, metadata and database
+      required: true
+    - container: /cache
+      description: Transcoding and image cache directory
+      required: true
+    - container: /movies
+      description: Host path for your movies library (optional)
+      required: false
+    - container: /tv
+      description: Host path for your TV shows library (optional)
+      required: false
+    - container: /music
+      description: Host path for your music library (optional)
+      required: false
+
+version: "3.8"
+
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=???
+      - PGID=???
+      - TZ=???
+      - JELLYFIN_PublishedServerUrl=
+    ports:
+      - "${HOST_PORT}:8096"
+      - "7359:7359/udp"
+      - "1900:1900/udp"
+    volumes:
+      - ???:/config
+      - ???:/cache
+      - ???:/movies:ro
+      - ???:/tv:ro
+      - ???:/music:ro
+    # iGPU hardware acceleration — Intel VAAPI / Quick Sync, AMD VAAPI
+    # Remove devices + group_add if your host has no /dev/dri
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "${RENDER_GID}"   # render group GID — run: getent group render | cut -d: -f3
+      - "44"              # video group (standard on all distros)
+    restart: unless-stopped
