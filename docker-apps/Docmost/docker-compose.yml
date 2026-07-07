@@ -1,0 +1,121 @@
+x-nexos:
+  name: Docmost
+  tagline:
+    en: Collaborative wiki and self-hosted knowledge base
+    it: Wiki collaborativa e knowledge base self-hosted
+  description:
+    en: Docmost is an open-source collaborative wiki and documentation platform — a modern alternative to Notion and Confluence. Features a rich-text editor, workspaces, granular permissions, inline comments, nested pages and real-time collaboration.
+    it: Docmost è una piattaforma wiki e documentazione collaborativa open-source — alternativa moderna a Notion e Confluence. Include editor ricco, spazi di lavoro, permessi granulari, commenti inline, pagine annidate e collaborazione in tempo reale.
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/docmost.webp
+  category: Productivity
+  tags:
+    - wiki
+    - documentation
+    - knowledge base
+    - notion alternative
+    - collaboration
+  developer: Docmost
+  version: latest
+  license: AGPL-3.0
+  port: 3000
+  arch:
+    - amd64
+    - arm64
+  website: https://docmost.com
+  repo: https://github.com/docmost/docmost
+  docs: https://docmost.com/docs
+  env:
+    - name: HOST_PORT
+      description: Host port to expose Docmost on
+      required: true
+      default: "3000"
+      type: number
+      min: 1
+      max: 65535
+    - name: APP_URL
+      description: Full public URL including protocol (e.g. https://wiki.yourdomain.com)
+      type: url
+      required: false
+      hint: Must start with http:// or https:// — the app will not start without a valid URL.
+    - name: APP_SECRET
+      description: Application secret key (used for sessions and encryption)
+      sensitive: true
+      required: true
+      hint: |
+        Generate with: openssl rand -hex 32
+    - name: SMTP_HOST
+      description: SMTP server hostname for outgoing email (optional)
+      required: false
+      group: Email
+    - name: SMTP_USERNAME
+      description: SMTP username or sender email address
+      required: false
+      group: Email
+    - name: SMTP_PASSWORD
+      description: SMTP password
+      sensitive: true
+      required: false
+      group: Email
+    - name: MAIL_FROM_ADDRESS
+      description: From address used in outgoing emails
+      type: email
+      required: false
+      group: Email
+    - name: MAIL_FROM_NAME
+      description: Display name for outgoing emails
+      required: false
+      default: Docmost
+      group: Email
+  volumes:
+    - container: /app/data/storage
+      description: Docmost uploads and attachments
+      required: true
+    - container: /var/lib/postgresql/data
+      description: PostgreSQL database
+      required: true
+    - container: /data
+      description: Redis cache data
+      required: false
+
+version: "3"
+
+services:
+  docmost:
+    image: docmost/docmost:latest
+    depends_on:
+      - db
+      - redis
+    environment:
+      - APP_URL=
+      - APP_SECRET=???
+      - DATABASE_URL=postgresql://docmost:nexos_db_secret@db:5432/docmost?schema=public
+      - REDIS_URL=redis://redis:6379
+      - MAIL_DRIVER=smtp
+      - SMTP_HOST=
+      - SMTP_PORT=587
+      - SMTP_USERNAME=
+      - SMTP_PASSWORD=
+      - MAIL_FROM_ADDRESS=
+      - MAIL_FROM_NAME=Docmost
+      - DISABLE_TELEMETRY=true
+    ports:
+      - "${HOST_PORT}:3000"
+    restart: unless-stopped
+    volumes:
+      - ???:/app/data/storage
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=docmost
+      - POSTGRES_USER=docmost
+      - POSTGRES_PASSWORD=nexos_db_secret
+    restart: unless-stopped
+    volumes:
+      - ???:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    volumes:
+      - ???:/data

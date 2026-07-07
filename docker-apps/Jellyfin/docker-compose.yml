@@ -1,0 +1,177 @@
+x-nexos:
+  name: Jellyfin
+  tagline:
+    en: Free media server with optional hardware transcoding
+    it: Media server libero con transcodifica hardware opzionale
+  description:
+    en: Jellyfin is a free and open-source media server for movies, TV shows and music. It supports hardware-accelerated transcoding via Intel/AMD iGPU (VAAPI / Quick Sync) or NVIDIA GPU (NVENC/NVDEC) — enable the matching optional feature during installation. Configure the codec type afterward in Dashboard → Playback → Transcoding.
+    it: Jellyfin è un media server libero e open-source per film, serie TV e musica. Supporta la transcodifica hardware via Intel/AMD iGPU (VAAPI / Quick Sync) o GPU NVIDIA (NVENC/NVDEC) — attiva la funzionalità opzionale corrispondente durante l'installazione. Configura il tipo di codec in Dashboard → Riproduzione → Transcodifica.
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/jellyfin.svg
+  thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/thumbnail.png
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/screenshot-3.png
+  category: Media
+  tags:
+    - media
+    - streaming
+    - movies
+    - tv shows
+    - music
+    - transcoding
+    - hardware acceleration
+    - dlna
+  developer: Jellyfin Team
+  version: latest
+  license: GPL-2.0
+  port: 8096
+  arch:
+    - amd64
+    - arm64
+  ports:
+    - port: 8096
+      description: Web interface / API
+      protocol: tcp
+    - port: 7359
+      description: Client auto-discovery
+      protocol: udp
+    - port: 1900
+      description: DLNA server discovery
+      protocol: udp
+  website: https://jellyfin.org
+  repo: https://github.com/jellyfin/jellyfin
+  docs: https://jellyfin.org/docs
+  env:
+    - name: HOST_PORT
+      description: Host port for the Jellyfin web interface
+      required: true
+      default: "8096"
+      type: number
+      min: 1
+      max: 65535
+    - name: PUID
+      description: UID of the user that owns your media files
+      required: false
+      default: "1000"
+      type: number
+    - name: PGID
+      description: GID of the user that owns your media files
+      required: false
+      default: "1000"
+      type: number
+    - name: TZ
+      description: Timezone (e.g. Europe/Rome)
+      required: false
+      default: Europe/Rome
+      placeholder: Europe/Rome
+    - name: JELLYFIN_PublishedServerUrl
+      description: Public URL shown to clients — needed only behind a reverse proxy
+      type: url
+      required: false
+      placeholder: https://jellyfin.yourdomain.com
+  features:
+    - id: hw_accel_igpu
+      name:
+        en: iGPU Acceleration — Intel or AMD
+        it: Accelerazione iGPU — Intel o AMD
+      description:
+        en: Passes /dev/dri to the container for hardware transcoding. Works for both Intel (VAAPI / Quick Sync) and AMD (VAAPI). After install, enable the matching codec in Jellyfin → Dashboard → Playback → Transcoding.
+        it: Passa /dev/dri al container per la transcodifica hardware. Funziona con Intel (VAAPI / Quick Sync) e AMD (VAAPI). Dopo l'installazione, abilita il codec corretto in Jellyfin → Dashboard → Riproduzione → Transcodifica.
+      default: false
+      env:
+        - name: GPU_TYPE
+          description: Your GPU brand — determines which codec to enable in Jellyfin admin
+          type: select
+          options:
+            - Intel — Quick Sync (QSV)
+            - Intel — VAAPI
+            - AMD — VAAPI
+          required: true
+          default: Intel — Quick Sync (QSV)
+        - name: RENDER_GID
+          description: GID of the 'render' group on the host
+          required: true
+          default: "103"
+          type: number
+          hint: |
+            Find the correct GID on your server:
+              getent group render | cut -d: -f3
+            Common values: 103 (Debian/Ubuntu), 105 (some distros).
+    - id: hw_accel_nvidia
+      name:
+        en: NVIDIA GPU Acceleration
+        it: Accelerazione GPU NVIDIA
+      description:
+        en: Enables NVENC/NVDEC hardware transcoding via nvidia-container-toolkit. Requires NVIDIA drivers and nvidia-container-toolkit installed on the host. After install, enable NVENC in Jellyfin → Dashboard → Playback → Transcoding.
+        it: Abilita la transcodifica hardware NVENC/NVDEC tramite nvidia-container-toolkit. Richiede i driver NVIDIA e nvidia-container-toolkit sul host. Dopo l'installazione, abilita NVENC in Jellyfin → Dashboard → Riproduzione → Transcodifica.
+      default: false
+      env:
+        - name: NVIDIA_VISIBLE_DEVICES
+          description: Which NVIDIA GPUs to expose to the container
+          required: true
+          default: "all"
+          hint: |
+            'all' exposes every GPU. For a specific GPU use its UUID:
+              nvidia-smi -L
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          description: NVIDIA driver capabilities passed to the container
+          required: false
+          default: "compute,video,utility"
+  volumes:
+    - container: /config
+      description: Jellyfin configuration, metadata and database
+      required: true
+    - container: /cache
+      description: Transcoding and image cache directory
+      required: true
+  media_volumes:
+    hint: "Add one path per library. Left = folder on your server, Right = folder inside the container (mounted read-only). You can add a single /multimedia or split into /movies, /tv, /music — your choice."
+    suggestions:
+      - container: /movies
+        label: Movies
+      - container: /tv
+        label: TV Shows
+      - container: /music
+        label: Music
+
+version: "3.8"
+
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=???
+      - PGID=???
+      - TZ=???
+      - JELLYFIN_PublishedServerUrl=
+# x-nexos-if: hw_accel_nvidia
+      - NVIDIA_VISIBLE_DEVICES=
+      - NVIDIA_DRIVER_CAPABILITIES=
+# x-nexos-endif
+    ports:
+      - "${HOST_PORT}:8096"
+      - "7359:7359/udp"
+      - "1900:1900/udp"
+    volumes:
+      - ???:/config
+      - ???:/cache
+      # x-nexos-media-volumes
+# x-nexos-if: hw_accel_igpu
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "${RENDER_GID}"
+      - "44"
+# x-nexos-endif
+# x-nexos-if: hw_accel_nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, video, compute, utility]
+# x-nexos-endif
+    restart: unless-stopped
