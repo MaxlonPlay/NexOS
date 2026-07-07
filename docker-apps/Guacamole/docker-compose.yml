@@ -1,0 +1,13 @@
+services:
+    guacamole:
+        image: flcontainers/guacamole
+        container_name: guacamole
+        restart: always
+        environment:
+            - 'EXTENSIONS=auth-totp'
+            - 'TZ=UTC'
+        volumes:
+            - '/etc/localtime:/etc/localtime:ro'
+            - '/docker/guacamole/config:/config'
+        ports:
+            - '8080:8080'
