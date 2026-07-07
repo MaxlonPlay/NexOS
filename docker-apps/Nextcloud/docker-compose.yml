@@ -18,6 +18,11 @@ x-nexos:
       description: Porta per l'interfaccia di amministrazione AIO
       required: true
       default: "8080"
+    - name: APACHE_PORT
+      description: Porta su cui Nextcloud viene esposto internamente da Apache
+      hint: Deve essere libera sul host. Di solito 11000 o una porta alta a tua scelta.
+      required: true
+      default: "11000"
     - name: NEXTCLOUD_CONFIG_DIR
       description: Cartella host per la configurazione di Nextcloud AIO
       hint: Es. /opt/nextcloud/config — deve esistere prima dell'avvio.
@@ -39,7 +44,7 @@ services:
     ports:
       - "${AIO_HTTP_PORT}:8080"
     environment:
-      - APACHE_PORT=11000
+      - APACHE_PORT=???
       - APACHE_IP_BINDING=0.0.0.0
       - SKIP_DOMAIN_VALIDATION=true
       - NEXTCLOUD_DATADIR=???
