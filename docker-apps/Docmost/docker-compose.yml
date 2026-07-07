@@ -4,7 +4,7 @@ x-nexos:
   description:
     it: Docmost è una piattaforma wiki collaborativa open-source, alternativa moderna a Notion e Confluence. Supporta editor ricco, spazi di lavoro, permessi granulari e commenti.
     en: Docmost is an open-source collaborative wiki platform, modern alternative to Notion and Confluence. Supports rich editor, workspaces, granular permissions and comments.
-  icon: https://avatars.githubusercontent.com/u/153452530
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/docmost.webp
   category: Produttività
   developer: Docmost
   version: latest
