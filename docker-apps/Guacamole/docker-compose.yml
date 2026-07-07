@@ -1,344 +1,70 @@
 x-nexos:
-  name: "*Arr Suite + VPN"
+  name: Apache Guacamole
   tagline:
-    en: Full media stack behind VPN — qBittorrent, Sonarr, Radarr, Prowlarr via Gluetun
-    it: Stack media completo sotto VPN — qBittorrent, Sonarr, Radarr, Prowlarr via Gluetun
+    en: Clientless remote desktop gateway — RDP, VNC and SSH in the browser
+    it: Gateway desktop remoto senza client — RDP, VNC e SSH nel browser
   description:
-    en: |-
-      Automated media management stack with all download traffic routed through a VPN via Gluetun. qBittorrent, Sonarr, Radarr, Prowlarr (and optionally Firefox) all share Gluetun's network namespace — no traffic ever leaves unencrypted.
-
-      Seerr (optional) runs on its own network as a request portal for movies and TV shows.
-
-      After install, all web UIs are on the configured ports. Connect qBittorrent / Sonarr / Radarr / Prowlarr to each other using hostname "gluetun" and their internal ports (8080, 8989, 7878, 9696).
-    it: |-
-      Stack per la gestione automatizzata dei media con tutto il traffico di download instradato tramite VPN via Gluetun. qBittorrent, Sonarr, Radarr, Prowlarr (e opzionalmente Firefox) condividono il namespace di rete di Gluetun — nessun traffico esce mai non cifrato.
-
-      Seerr (opzionale) gira sulla propria rete come portale richieste per film e serie TV.
-
-      Dopo l'installazione tutte le web UI sono sulle porte configurate. Collega qBittorrent / Sonarr / Radarr / Prowlarr tra loro usando hostname "gluetun" con le porte interne (8080, 8989, 7878, 9696).
-  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gluetun.svg
-  category: Downloads
+    en: Apache Guacamole lets you access remote machines (RDP, VNC, SSH) through any HTML5 browser — no client software needed. This all-in-one image bundles the web app, the native proxy daemon and the database in a single container. After install open http://YOUR_IP:PORT/guacamole and log in with guacadmin / guacadmin — change the password immediately.
+    it: Apache Guacamole permette di accedere a macchine remote (RDP, VNC, SSH) da qualsiasi browser HTML5 senza installare client. Questa immagine all-in-one include webapp, daemon proxy e database in un unico container. Dopo l'installazione apri http://TUO_IP:PORT/guacamole e accedi con guacadmin / guacadmin — cambia subito la password.
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/guacamole-light.webp
+  category: Remote Access
   tags:
-    - vpn
-    - torrent
-    - download
-    - sonarr
-    - radarr
-    - prowlarr
-    - qbittorrent
-    - arr
-    - gluetun
-  developer: Various
+    - remote desktop
+    - rdp
+    - vnc
+    - ssh
+    - browser
+    - gateway
+  developer: Apache Software Foundation
   version: latest
-  license: GPL-3.0
+  license: Apache-2.0
   port: 8080
   arch:
     - amd64
     - arm64
-  website: https://github.com/qdm12/gluetun
-  docs: https://github.com/qdm12/gluetun-wiki
+  website: https://guacamole.apache.org
+  repo: https://github.com/apache/guacamole-server
+  docs: https://guacamole.apache.org/doc/gug/
   env:
-    - name: VPN_SERVICE_PROVIDER
-      description: VPN provider name
-      required: true
-      default: protonvpn
-      hint: |
-        Examples: protonvpn, mullvad, nordvpn, expressvpn, surfshark, private internet access
-        Full list: https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers
-    - name: VPN_TYPE
-      description: VPN protocol
-      required: true
-      type: select
-      options: [wireguard, openvpn]
-      default: wireguard
-    - name: SERVER_COUNTRIES
-      description: VPN server country (comma-separated for multiple)
-      required: false
-      default: Netherlands
-      hint: "Examples: Netherlands — Switzerland — \"Netherlands,Switzerland\""
-    - name: TZ
-      description: Timezone for all services
-      required: false
-      default: Europe/Rome
-    - name: PUID
-      description: User ID for file permissions
-      required: false
-      default: "1000"
-      type: number
-    - name: PGID
-      description: Group ID for file permissions
-      required: false
-      default: "1000"
-      type: number
-    - name: CONFIG_BASE
-      description: Host base directory for all service configs
-      required: true
-      hint: |
-        A subdirectory is created per service automatically.
-        Example: /mnt/data/arr-stack
-        → /mnt/data/arr-stack/qbittorrent, /mnt/data/arr-stack/sonarr, etc.
-    - name: QBIT_PORT
-      description: qBittorrent web UI port
+    - name: HOST_PORT
+      description: Host port for the Guacamole web interface
       required: true
       default: "8080"
       type: number
-    - name: SONARR_PORT
-      description: Sonarr web UI port
-      required: true
-      default: "8989"
-      type: number
-    - name: RADARR_PORT
-      description: Radarr web UI port
-      required: true
-      default: "7878"
-      type: number
-    - name: PROWLARR_PORT
-      description: Prowlarr web UI port
-      required: true
-      default: "9696"
-      type: number
+      min: 1
+      max: 65535
+    - name: TZ
+      description: Server timezone
+      required: false
+      default: Europe/Rome
   features:
-    - id: wireguard
+    - id: totp
       name:
-        en: WireGuard credentials
-        it: Credenziali WireGuard
+        en: TOTP Two-Factor Authentication
+        it: Autenticazione a due fattori TOTP
       description:
-        en: WireGuard private key from your VPN provider. Enable when VPN_TYPE is wireguard.
-        it: Chiave privata WireGuard del provider VPN. Attivare quando VPN_TYPE è wireguard.
-      default: true
-      env:
-        - name: WIREGUARD_PRIVATE_KEY
-          description: WireGuard private key (from provider dashboard)
-          required: true
-          sensitive: true
-        - name: WIREGUARD_ADDRESSES
-          description: Assigned WireGuard IP — required by some providers (e.g. Mullvad, AzireVPN)
-          required: false
-          hint: "Format: 10.x.x.x/32 — leave empty for ProtonVPN"
-    - id: openvpn
-      name:
-        en: OpenVPN credentials
-        it: Credenziali OpenVPN
-      description:
-        en: OpenVPN username and password. Enable when VPN_TYPE is openvpn.
-        it: Username e password OpenVPN. Attivare quando VPN_TYPE è openvpn.
+        en: Enables TOTP two-factor authentication (Google Authenticator, Authy, etc.). Users will be prompted to enroll on first login.
+        it: Abilita l'autenticazione a due fattori TOTP (Google Authenticator, Authy, ecc.). Gli utenti verranno invitati a registrarsi al primo accesso.
       default: false
-      env:
-        - name: OPENVPN_USER
-          description: OpenVPN username (from provider dashboard)
-          required: true
-        - name: OPENVPN_PASSWORD
-          description: OpenVPN password
-          required: true
-          sensitive: true
-    - id: port_forwarding
-      name:
-        en: VPN port forwarding
-        it: Port forwarding VPN
-      description:
-        en: Enables VPN port forwarding and auto-updates qBittorrent listen port. Supported by ProtonVPN, Mullvad, PIA and others — restricts to servers that support it.
-        it: Abilita il port forwarding VPN e aggiorna automaticamente la porta di ascolto di qBittorrent. Supportato da ProtonVPN, Mullvad, PIA e altri — limita ai server che lo supportano.
-      default: true
-    - id: seerr
-      name:
-        en: Seerr — request portal
-        it: Seerr — portale richieste
-      description:
-        en: Adds the Seerr request portal. Users request movies and TV shows; Seerr forwards them to Radarr and Sonarr automatically.
-        it: Aggiunge il portale Seerr. Gli utenti richiedono film e serie TV; Seerr le invia automaticamente a Radarr e Sonarr.
-      default: true
-      env:
-        - name: SEERR_PORT
-          description: Seerr web UI port
-          required: true
-          default: "5055"
-          type: number
-    - id: firefox
-      name:
-        en: Firefox in VPN
-        it: Firefox in VPN
-      description:
-        en: Adds a Firefox browser container running inside the VPN. Useful for configuring indexers or accessing VPN-only sites.
-        it: Aggiunge un container Firefox che gira dentro la VPN. Utile per configurare indexer o accedere a siti solo-VPN.
-      default: false
-      env:
-        - name: FIREFOX_PORT_1
-          description: Firefox primary web UI port
-          required: true
-          default: "3000"
-          type: number
-        - name: FIREFOX_PORT_2
-          description: Firefox secondary web UI port
-          required: true
-          default: "3001"
-          type: number
   volumes:
-    - container: /gluetun
-      description: Gluetun VPN data, credentials and server lists
-      required: true
-    - container: /downloads
-      description: Download directory — shared between qBittorrent, Sonarr and Radarr
-      required: true
-    - container: /movies
-      description: Movies library (Radarr)
-      required: true
-    - container: /tv
-      description: TV shows library (Sonarr)
+    - container: /config
+      description: Guacamole configuration, database and extensions
       required: true
 
-version: "3.8"
+version: "3"
 
 services:
-  gluetun:
-    image: qmcgaw/gluetun:v3
-    container_name: gluetun
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
+  guacamole:
+    image: flcontainers/guacamole
+    container_name: guacamole
     environment:
       - TZ=${TZ}
-      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER}
-      - VPN_TYPE=${VPN_TYPE}
-      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
-      - UPDATER_PERIOD=24h
-      - BLOCK_MALICIOUS=off
-# x-nexos-if: wireguard
-      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
-      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
-# x-nexos-endif
-# x-nexos-if: openvpn
-      - OPENVPN_USER=${OPENVPN_USER}
-      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
-      - OPENVPN_CIPHERS=AES-256-GCM
-# x-nexos-endif
-# x-nexos-if: port_forwarding
-      - VPN_PORT_FORWARDING=on
-      - PORT_FORWARD_ONLY=on
-      - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data "json={\"listen_port\":{{PORTS}}}" http://127.0.0.1:8080/api/v2/app/setPreferences 2>&1'
+# x-nexos-if: totp
+      - EXTENSIONS=auth-totp
 # x-nexos-endif
     ports:
-      - "${QBIT_PORT}:8080"
-      - "${SONARR_PORT}:8989"
-      - "${RADARR_PORT}:7878"
-      - "${PROWLARR_PORT}:9696"
-# x-nexos-if: firefox
-      - "${FIREFOX_PORT_1}:3000"
-      - "${FIREFOX_PORT_2}:3001"
-# x-nexos-endif
+      - "${HOST_PORT}:8080"
     volumes:
-      - ???:/gluetun
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q --spider http://localhost:8000 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
-    restart: always
-
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    network_mode: "service:gluetun"
-    depends_on:
-      gluetun:
-        condition: service_healthy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - WEBUI_PORT=8080
-    volumes:
-      - ${CONFIG_BASE}/qbittorrent:/config
-      - ???:/downloads
-    restart: always
-
-  radarr:
-    image: lscr.io/linuxserver/radarr:latest
-    container_name: radarr
-    network_mode: "service:gluetun"
-    depends_on:
-      gluetun:
-        condition: service_healthy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${CONFIG_BASE}/radarr:/config
-      - ???:/movies
-      - ???:/downloads
-    restart: always
-
-  sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
-    container_name: sonarr
-    network_mode: "service:gluetun"
-    depends_on:
-      gluetun:
-        condition: service_healthy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${CONFIG_BASE}/sonarr:/config
-      - ???:/tv
-      - ???:/downloads
-    restart: always
-
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    network_mode: "service:gluetun"
-    depends_on:
-      gluetun:
-        condition: service_healthy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${CONFIG_BASE}/prowlarr:/config
-    restart: always
-
-# x-nexos-if: seerr
-  seerr:
-    image: ghcr.io/seerr-team/seerr:latest
-    init: true
-    container_name: seerr
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - LOG_LEVEL=info
-      - TZ=${TZ}
-    ports:
-      - "${SEERR_PORT}:5055"
-    volumes:
-      - ${CONFIG_BASE}/seerr:/app/config
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
-      start_period: 20s
-      timeout: 3s
-      interval: 15s
-      retries: 3
-    restart: always
-# x-nexos-endif
-
-# x-nexos-if: firefox
-  firefox:
-    image: lscr.io/linuxserver/firefox:latest
-    container_name: firefox
-    network_mode: "service:gluetun"
-    depends_on:
-      gluetun:
-        condition: service_healthy
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${CONFIG_BASE}/firefox:/config
-    shm_size: "1gb"
-    restart: always
-# x-nexos-endif
+      - /etc/localtime:/etc/localtime:ro
+      - ???:/config
+    restart: unless-stopped
