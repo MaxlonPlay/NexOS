@@ -22,6 +22,7 @@
     screenshots:
       - https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vaultwarden.png
       - https://raw.githubusercontent.com/dani-garcia/vaultwarden/main/resources/screenshots/vault.png
+    tagline: Self-hosted password manager compatibile con Bitwarden
     category: sicurezza
     developer: dani-garcia
     env:
