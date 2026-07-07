@@ -13,6 +13,10 @@ x-nexos:
   website: https://docmost.com
   repo: https://github.com/docmost/docmost
   env:
+    - name: HOST_PORT
+      description: Porta host su cui esporre Docmost
+      required: true
+      default: "3000"
     - name: APP_URL
       description: URL pubblico dell'app (es. https://wiki.tuodominio.com)
       required: true
@@ -62,7 +66,7 @@ services:
       - MAIL_FROM_NAME=Docmost
       - DISABLE_TELEMETRY=true
     ports:
-      - "3000:3000"
+      - "${HOST_PORT}:3000"
     restart: unless-stopped
     volumes:
       - docmost_storage:/app/data/storage
