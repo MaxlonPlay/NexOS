@@ -147,8 +147,8 @@ services:
       - TZ=???
       - JELLYFIN_PublishedServerUrl=
 # x-nexos-if: hw_accel_nvidia
-      - NVIDIA_VISIBLE_DEVICES=???
-      - NVIDIA_DRIVER_CAPABILITIES=???
+      - NVIDIA_VISIBLE_DEVICES=
+      - NVIDIA_DRIVER_CAPABILITIES=
 # x-nexos-endif
     ports:
       - "${HOST_PORT}:8096"
