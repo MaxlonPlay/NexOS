@@ -125,15 +125,15 @@ x-nexos:
     - container: /cache
       description: Transcoding and image cache directory
       required: true
-    - container: /movies
-      description: Host path for your movies library (optional)
-      required: false
-    - container: /tv
-      description: Host path for your TV shows library (optional)
-      required: false
-    - container: /music
-      description: Host path for your music library (optional)
-      required: false
+  media_volumes:
+    hint: "Add one path per library. Left = folder on your server, Right = folder inside the container (mounted read-only). You can add a single /multimedia or split into /movies, /tv, /music — your choice."
+    suggestions:
+      - container: /movies
+        label: Movies
+      - container: /tv
+        label: TV Shows
+      - container: /music
+        label: Music
 
 version: "3.8"
 
@@ -157,9 +157,7 @@ services:
     volumes:
       - ???:/config
       - ???:/cache
-      - ???:/movies:ro
-      - ???:/tv:ro
-      - ???:/music:ro
+      # x-nexos-media-volumes
 # x-nexos-if: hw_accel_igpu
     devices:
       - /dev/dri:/dev/dri
