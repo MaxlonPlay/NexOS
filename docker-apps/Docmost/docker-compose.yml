@@ -35,7 +35,7 @@ x-nexos:
     - name: APP_URL
       description: Full public URL including protocol (e.g. https://wiki.yourdomain.com)
       type: url
-      required: false
+      required: true
       hint: Must start with http:// or https:// — the app will not start without a valid URL.
     - name: APP_SECRET
       description: Application secret key (used for sessions and encryption)
