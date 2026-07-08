@@ -1,0 +1,83 @@
+x-nexos:
+  name: Nginx Proxy Manager
+  tagline:
+    en: Reverse proxy with SSL management via a simple web UI
+    it: Reverse proxy con gestione SSL tramite una semplice interfaccia web
+  description:
+    en: |-
+      Nginx Proxy Manager lets you forward web services to your servers with free SSL from Let's Encrypt, custom certificates, access lists, and redirects — all from a simple web interface. No Nginx knowledge required.
+
+      Ports 80 and 443 are fixed (they are the actual proxy ports). Only the admin UI port is configurable.
+
+      Default credentials on first login:
+        Email:    admin@example.com
+        Password: changeme
+    it: |-
+      Nginx Proxy Manager permette di instradare i servizi web verso i tuoi server con SSL gratuito di Let's Encrypt, certificati personalizzati, liste di accesso e redirect — tutto da un'interfaccia web semplice. Nessuna conoscenza di Nginx richiesta.
+
+      Le porte 80 e 443 sono fisse (sono le porte del proxy vero e proprio). Solo la porta dell'admin UI è configurabile.
+
+      Credenziali predefinite al primo accesso:
+        Email:    admin@example.com
+        Password: changeme
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nginx-proxy-manager.svg
+  category: Network
+  tags:
+    - proxy
+    - reverse-proxy
+    - nginx
+    - ssl
+    - letsencrypt
+    - network
+  developer: jc21
+  version: latest
+  license: MIT
+  port: 81
+  arch:
+    - amd64
+    - arm64
+  website: https://nginxproxymanager.com
+  repo: https://github.com/NginxProxyManager/nginx-proxy-manager
+  docs: https://nginxproxymanager.com/guide/
+  screenshots:
+    - https://nginxproxymanager.com/screenshots/proxy-hosts.png
+    - https://nginxproxymanager.com/screenshots/proxy-hosts-add.png
+    - https://nginxproxymanager.com/screenshots/redirection-hosts.png
+    - https://nginxproxymanager.com/screenshots/certificates.png
+  env:
+    - name: ADMIN_PORT
+      description: Admin web UI port
+      required: true
+      default: "81"
+      type: number
+      min: 1
+      max: 65535
+      hint: "Ports 80 and 443 are fixed — they handle all proxied traffic."
+    - name: TZ
+      description: Timezone
+      required: false
+      default: Europe/Rome
+  volumes:
+    - container: /data
+      description: NPM database, proxy configs and managed certificates
+      required: true
+    - container: /etc/letsencrypt
+      description: Let's Encrypt certificates (renewed automatically)
+      required: true
+
+version: "3.8"
+
+services:
+  app:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    environment:
+      - TZ=${TZ}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "${ADMIN_PORT}:81"
+    volumes:
+      - ???:/data
+      - ???:/etc/letsencrypt
+    restart: unless-stopped
