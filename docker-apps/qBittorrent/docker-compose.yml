@@ -102,6 +102,15 @@ services:
       - "${HOST_PORT}:8080"
       - "${PEERPORT}:6881"
       - "${PEERPORT}:6881/udp"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        CONF=/config/qBittorrent/config/qBittorrent.conf
+        if [ -f "$$CONF" ] && ! grep -q 'HostHeaderValidation' "$$CONF"; then
+          echo 'WebUI\HostHeaderValidation=false' >> "$$CONF"
+        fi
+        exec /init
     volumes:
       - ???:/config
       - ???:/downloads
