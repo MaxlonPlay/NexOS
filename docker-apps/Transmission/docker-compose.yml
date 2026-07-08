@@ -1,0 +1,115 @@
+x-nexos:
+  name: Transmission
+  tagline:
+    en: Lightweight BitTorrent client with web interface
+    it: Client BitTorrent leggero con interfaccia web
+  description:
+    en: Transmission is a fast, lightweight and open-source BitTorrent client with a clean web interface accessible from any browser. It supports magnet links, DHT, PEX, peer encryption, bandwidth scheduling and watch folders for automatic torrent additions. Minimal resource usage makes it ideal for always-on servers.
+    it: Transmission è un client BitTorrent veloce, leggero e open-source con un'interfaccia web accessibile da qualsiasi browser. Supporta link magnet, DHT, PEX, cifratura peer, pianificazione della banda e cartelle di monitoraggio per l'aggiunta automatica dei torrent. Il consumo minimo di risorse lo rende ideale per server sempre accesi.
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/transmission.svg
+  thumbnail: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/transmission.png
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Transmission/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Transmission/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Transmission/screenshot-3.png
+  category: Downloaders
+  tags:
+    - torrent
+    - bittorrent
+    - downloader
+    - p2p
+  developer: linuxserver
+  version: latest
+  license: GPL-2.0
+  port: 9091
+  arch:
+    - amd64
+    - arm64
+    - arm/v7
+  ports:
+    - port: 9091
+      description: Web interface
+      protocol: tcp
+    - port: 51413
+      description: BitTorrent peer connections (TCP)
+      protocol: tcp
+    - port: 51413
+      description: BitTorrent peer connections (UDP)
+      protocol: udp
+  website: https://transmissionbt.com
+  repo: https://github.com/transmission/transmission
+  docs: https://github.com/transmission/transmission/wiki
+  env:
+    - name: HOST_PORT
+      description: Host port for the Transmission web interface
+      required: true
+      default: "9091"
+      type: number
+      min: 1
+      max: 65535
+    - name: PEERPORT
+      description: BitTorrent peer port used for incoming connections (TCP and UDP)
+      hint: |
+        Open this port on your firewall and forward it on your router for the best connectivity.
+        The same value is applied both to the Transmission setting and the host port mapping.
+      required: true
+      default: "51413"
+      type: number
+      min: 1024
+      max: 65535
+    - name: PUID
+      description: UID of the user that owns your download files
+      required: false
+      default: "1000"
+      type: number
+    - name: PGID
+      description: GID of the user that owns your download files
+      required: false
+      default: "1000"
+      type: number
+    - name: TZ
+      description: Timezone
+      required: false
+      default: Europe/Rome
+      placeholder: Europe/Rome
+    - name: USER
+      description: Username for the web interface (leave empty to disable authentication)
+      required: false
+      placeholder: admin
+    - name: PASS
+      description: Password for the web interface
+      required: false
+      sensitive: true
+  volumes:
+    - container: /config
+      description: Transmission configuration, settings and resume files
+      required: true
+    - container: /downloads
+      description: Directory where completed and in-progress downloads are stored
+      required: true
+    - container: /watch
+      description: Watch folder — .torrent files placed here are added automatically (optional)
+      required: false
+
+version: "3.8"
+
+services:
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    environment:
+      - PUID=???
+      - PGID=???
+      - TZ=???
+      - PEERPORT=???
+      - USER=
+      - PASS=
+    ports:
+      - "${HOST_PORT}:9091"
+      - "${PEERPORT}:51413"
+      - "${PEERPORT}:51413/udp"
+    volumes:
+      - ???:/config
+      - ???:/downloads
+      - ???:/watch
+    restart: unless-stopped
