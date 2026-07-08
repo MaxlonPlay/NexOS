@@ -1,0 +1,109 @@
+x-nexos:
+  name: qBittorrent
+  tagline:
+    en: Feature-rich BitTorrent client with web interface
+    it: Client BitTorrent ricco di funzionalità con interfaccia web
+  description:
+    en: |-
+      qBittorrent is a free and open-source BitTorrent client that aims to be a good alternative to µTorrent. It features a polished web interface, built-in torrent search engine, RSS feed support with auto-download rules, sequential downloading, IP filtering and bandwidth scheduling — all without ads or bundled software.
+
+      First login: username "admin", password printed in the container logs on first start. Run: docker logs qbittorrent | grep -i password — then change it in Settings → Web UI.
+    it: |-
+      qBittorrent è un client BitTorrent gratuito e open-source pensato come alternativa a µTorrent. Offre un'interfaccia web curata, motore di ricerca integrato, supporto RSS con regole di download automatico, download sequenziale, filtro IP e pianificazione della banda — senza pubblicità né software in bundle.
+
+      Primo accesso: username "admin", password stampata nei log del container al primo avvio. Esegui: docker logs qbittorrent | grep -i password — poi cambiala in Impostazioni → Interfaccia web.
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/qbittorrent.svg
+  thumbnail: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/qbittorrent.png
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/qBittorrent/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/qBittorrent/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/qBittorrent/screenshot-3.png
+  category: Downloaders
+  tags:
+    - torrent
+    - bittorrent
+    - downloader
+    - p2p
+  developer: linuxserver
+  version: latest
+  license: GPL-2.0
+  port: 8080
+  arch:
+    - amd64
+    - arm64
+    - arm/v7
+  ports:
+    - port: 8080
+      description: Web interface
+      protocol: tcp
+    - port: 6881
+      description: BitTorrent peer connections (TCP)
+      protocol: tcp
+    - port: 6881
+      description: BitTorrent peer connections (UDP)
+      protocol: udp
+  website: https://www.qbittorrent.org
+  repo: https://github.com/qbittorrent/qBittorrent
+  docs: https://github.com/qbittorrent/qBittorrent/wiki
+  env:
+    - name: HOST_PORT
+      description: Host port for the qBittorrent web interface
+      required: true
+      default: "8080"
+      type: number
+      min: 1
+      max: 65535
+    - name: PEERPORT
+      description: BitTorrent peer port for incoming connections (TCP and UDP)
+      hint: |
+        Open this port on your firewall and forward it on your router for the best connectivity.
+        The same value is applied both to the qBittorrent setting and the host port mapping.
+      required: true
+      default: "6881"
+      type: number
+      min: 1024
+      max: 65535
+    - name: PUID
+      description: UID of the user that owns your download files
+      required: false
+      default: "1000"
+      type: number
+    - name: PGID
+      description: GID of the user that owns your download files
+      required: false
+      default: "1000"
+      type: number
+    - name: TZ
+      description: Timezone
+      required: false
+      default: Europe/Rome
+      placeholder: Europe/Rome
+  volumes:
+    - container: /config
+      description: qBittorrent configuration, settings and session files
+      required: true
+    - container: /downloads
+      description: Directory where completed and in-progress downloads are stored
+      required: true
+
+version: "3.8"
+
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=???
+      - PGID=???
+      - TZ=???
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=${PEERPORT}
+    ports:
+      - "${HOST_PORT}:8080"
+      - "${PEERPORT}:6881"
+      - "${PEERPORT}:6881/udp"
+    volumes:
+      - ???:/config
+      - ???:/downloads
+    stop_grace_period: "10s"
+    restart: unless-stopped
