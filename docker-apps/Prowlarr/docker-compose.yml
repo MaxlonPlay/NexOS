@@ -7,7 +7,6 @@ x-nexos:
     en: Prowlarr is a centralized indexer manager and proxy built on the *arr stack. It integrates seamlessly with Radarr, Sonarr, Lidarr, Readarr and Mylar3, managing both Torrent Trackers and Usenet Indexers from a single place — no per-app indexer setup needed.
     it: Prowlarr è un gestore centralizzato di indexer e proxy basato sullo stack *arr. Si integra con Radarr, Sonarr, Lidarr, Readarr e Mylar3, gestendo Torrent Tracker e Usenet Indexer da un unico pannello — nessuna configurazione separata per ogni app.
   icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/icon.svg
-  thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/thumbnail.png
   screenshot_link:
     - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/screenshot-1.png
     - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Prowlarr/screenshot-2.png

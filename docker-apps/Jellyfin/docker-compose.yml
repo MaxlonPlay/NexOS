@@ -7,11 +7,10 @@ x-nexos:
     en: Jellyfin is a free and open-source media server for movies, TV shows and music. It supports hardware-accelerated transcoding via Intel/AMD iGPU (VAAPI / Quick Sync) or NVIDIA GPU (NVENC/NVDEC) — enable the matching optional feature during installation. Configure the codec type afterward in Dashboard → Playback → Transcoding.
     it: Jellyfin è un media server libero e open-source per film, serie TV e musica. Supporta la transcodifica hardware via Intel/AMD iGPU (VAAPI / Quick Sync) o GPU NVIDIA (NVENC/NVDEC) — attiva la funzionalità opzionale corrispondente durante l'installazione. Configura il tipo di codec in Dashboard → Riproduzione → Transcodifica.
   icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/jellyfin.svg
-  thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/thumbnail.png
   screenshot_link:
-    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/screenshot-1.png
-    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/screenshot-2.png
-    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/screenshot-3.png
+    - https://jellyfin.org/assets/images/10.8-home-4a73a92bf90d1eeffa5081201ca9c7bb.png
+    - https://jellyfin.org/assets/images/10.8-library-9c07ba46877a03e749c0c8b5ed157e53.png
+    - https://jellyfin.org/assets/images/10.8-details-df4f7caaee389ffbaeeaa95b668fa037.png
   category: Media
   tags:
     - media
