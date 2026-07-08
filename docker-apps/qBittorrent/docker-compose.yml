@@ -106,10 +106,9 @@ services:
       - /bin/sh
       - -c
       - |
+        mkdir -p /config/qBittorrent/config
         CONF=/config/qBittorrent/config/qBittorrent.conf
-        if [ -f "$$CONF" ] && ! grep -q 'HostHeaderValidation' "$$CONF"; then
-          echo 'WebUI\HostHeaderValidation=false' >> "$$CONF"
-        fi
+        grep -q 'HostHeaderValidation' "$$CONF" 2>/dev/null || printf '[Preferences]\nWebUI\\HostHeaderValidation=false\n' >> "$$CONF"
         exec /init
     volumes:
       - ???:/config
