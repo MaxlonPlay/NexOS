@@ -4,8 +4,14 @@ x-nexos:
     en: Feature-rich BitTorrent client with web interface
     it: Client BitTorrent ricco di funzionalità con interfaccia web
   description:
-    en: qBittorrent is a free and open-source BitTorrent client that aims to be a good alternative to µTorrent. It features a polished web interface, built-in torrent search engine, RSS feed support with auto-download rules, sequential downloading, IP filtering and bandwidth scheduling — all without ads or bundled software.
-    it: qBittorrent è un client BitTorrent gratuito e open-source pensato come alternativa a µTorrent. Offre un'interfaccia web curata, motore di ricerca integrato, supporto RSS con regole di download automatico, download sequenziale, filtro IP e pianificazione della banda — senza pubblicità né software in bundle.
+    en: |-
+      qBittorrent is a free and open-source BitTorrent client that aims to be a good alternative to µTorrent. It features a polished web interface, built-in torrent search engine, RSS feed support with auto-download rules, sequential downloading, IP filtering and bandwidth scheduling — all without ads or bundled software.
+
+      First login: username "admin", password printed in the container logs on first start. Run: docker logs qbittorrent | grep -i password — then change it in Settings → Web UI.
+    it: |-
+      qBittorrent è un client BitTorrent gratuito e open-source pensato come alternativa a µTorrent. Offre un'interfaccia web curata, motore di ricerca integrato, supporto RSS con regole di download automatico, download sequenziale, filtro IP e pianificazione della banda — senza pubblicità né software in bundle.
+
+      Primo accesso: username "admin", password stampata nei log del container al primo avvio. Esegui: docker logs qbittorrent | grep -i password — poi cambiala in Impostazioni → Interfaccia web.
   icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/qbittorrent.svg
   thumbnail: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/qbittorrent.png
   screenshot_link:
@@ -57,13 +63,6 @@ x-nexos:
       type: number
       min: 1024
       max: 65535
-    - name: WEBUI_PASSWORD
-      description: Password for the qBittorrent web interface
-      hint: |
-        Default username is "admin". Change the password on first login if left empty here.
-        On first start qBittorrent prints a temporary password in the container logs.
-      required: false
-      sensitive: true
     - name: PUID
       description: UID of the user that owns your download files
       required: false
