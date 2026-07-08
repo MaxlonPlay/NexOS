@@ -54,7 +54,7 @@ x-nexos:
       min: 1
       max: 65535
     - name: PEERPORT
-      description: BitTorrent peer port used for incoming connections (TCP and UDP)
+      description: BitTorrent peer port for incoming connections (TCP and UDP)
       hint: |
         Open this port on your firewall and forward it on your router for the best connectivity.
         The same value is applied both to the qBittorrent setting and the host port mapping.
@@ -105,4 +105,5 @@ services:
     volumes:
       - ???:/config
       - ???:/downloads
+    stop_grace_period: "10s"
     restart: unless-stopped
