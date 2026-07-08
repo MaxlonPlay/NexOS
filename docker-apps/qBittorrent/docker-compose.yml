@@ -96,10 +96,10 @@ services:
       - PUID=???
       - PGID=???
       - TZ=???
-      - WEBUI_PORT=8080
+      - WEBUI_PORT=${HOST_PORT}
       - TORRENTING_PORT=${PEERPORT}
     ports:
-      - "${HOST_PORT}:8080"
+      - "${HOST_PORT}:${HOST_PORT}"
       - "${PEERPORT}:6881"
       - "${PEERPORT}:6881/udp"
     volumes:
