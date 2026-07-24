@@ -44,15 +44,6 @@ x-nexos:
       description: "PostgreSQL database name"
       required: true
       default: immich
-  volumes:
-    - container: /data
-      description: "Photos and videos storage"
-      required: true
-      default: /var/lib/immich/upload
-    - container: /var/lib/postgresql/data
-      description: "PostgreSQL database storage"
-      required: true
-      default: /var/lib/immich/db
   features:
     - id: ml_accel
       name: "ML Hardware Acceleration"
