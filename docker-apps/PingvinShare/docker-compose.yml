@@ -1,0 +1,68 @@
+x-nexos:
+  name: Pingvin Share
+  tagline:
+    en: Self-hosted file sharing platform — send files without limits
+    it: Piattaforma di condivisione file self-hosted — invia file senza limiti
+  description:
+    en: |-
+      Pingvin Share is a lightweight self-hosted file sharing platform.
+      Create share links with optional password protection, expiry date and
+      download limits — without relying on WeTransfer or similar cloud services.
+      Files are stored locally on your server.
+    it: |-
+      Pingvin Share è una piattaforma di condivisione file self-hosted leggera.
+      Crea link di condivisione con protezione password opzionale, data di scadenza
+      e limite di download — senza dipendere da WeTransfer o servizi cloud simili.
+      I file vengono salvati localmente sul tuo server.
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pingvin-share.svg
+  category: Cloud & Storage
+  tags:
+    - file-sharing
+    - upload
+    - send
+    - transfer
+  developer: stonith404
+  version: latest
+  license: BSD-2-Clause
+  port: 3000
+  website: https://pingvin-share.dev.eliasschneider.com
+  repo: https://github.com/stonith404/pingvin-share
+  docs: https://github.com/stonith404/pingvin-share#readme
+  env:
+    - name: HOST_PORT
+      description: Host port for the Pingvin Share web interface
+      required: true
+      default: "3000"
+      type: number
+    - name: DATA_PATH
+      description: Host directory where all Pingvin data and uploads will be stored
+      required: true
+      path: true
+      default: /var/lib/pingvin
+      hint: "A /images subdirectory is created automatically inside this folder"
+  features:
+    - id: reverse_proxy
+      name:
+        en: Behind reverse proxy
+        it: Dietro reverse proxy
+      description:
+        en: Enable if Nginx Proxy Manager or another reverse proxy is in front of this container. Required for correct IP logging and HTTPS redirect.
+        it: Abilita se Nginx Proxy Manager o un altro reverse proxy è davanti a questo container. Necessario per il corretto logging degli IP e il redirect HTTPS.
+      default: false
+
+services:
+  pingvin-share:
+    image: stonith404/pingvin-share
+    container_name: pingvin-share
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT}:3000"
+    environment:
+# x-nexos-if: reverse_proxy
+      - TRUST_PROXY=true
+# x-nexos-endif
+# x-nexos-if: reverse_proxy
+# x-nexos-endif
+    volumes:
+      - ${DATA_PATH}:/opt/app/backend/data
+      - ${DATA_PATH}/images:/opt/app/frontend/public/img
