@@ -1,0 +1,74 @@
+x-nexos:
+  name: Heimdall
+  tagline:
+    en: Application dashboard for all your web applications
+    it: Dashboard per tutte le tue applicazioni web
+  description:
+    en: |-
+      Heimdall is a simple and elegant dashboard for organizing links to your
+      self-hosted services and any other website you use daily.
+      No setup required — just add your apps, set icons and colors, and enjoy
+      a clean start page accessible from any browser.
+    it: |-
+      Heimdall è una dashboard semplice ed elegante per organizzare i link ai tuoi
+      service self-hosted e a qualsiasi altro sito web che usi ogni giorno.
+      Nessuna configurazione richiesta — aggiungi le app, imposta icone e colori,
+      e ottieni una start page accessibile da qualsiasi browser.
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/heimdall.svg
+  category: Productivity
+  tags:
+    - dashboard
+    - homepage
+    - startpage
+  developer: linuxserver.io
+  version: latest
+  license: MIT
+  port: 80
+  website: https://heimdall.site
+  repo: https://github.com/linuxserver/Heimdall
+  docs: https://github.com/linuxserver/Heimdall/wiki
+  env:
+    - name: PUID
+      description: User ID for file permissions
+      required: false
+      default: "1000"
+      type: number
+    - name: PGID
+      description: Group ID for file permissions
+      required: false
+      default: "1000"
+      type: number
+    - name: TZ
+      description: Timezone
+      required: false
+      default: Europe/Rome
+    - name: HTTP_PORT
+      description: HTTP port exposed on the host
+      required: true
+      default: "80"
+      type: number
+    - name: HTTPS_PORT
+      description: HTTPS port exposed on the host
+      required: true
+      default: "443"
+      type: number
+  volumes:
+    - container: /config
+      description: Heimdall configuration and database
+      required: true
+      default: /var/lib/heimdall/config
+
+services:
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: heimdall
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ???:/config
+    ports:
+      - "${HTTP_PORT}:80"
+      - "${HTTPS_PORT}:443"
+    restart: unless-stopped

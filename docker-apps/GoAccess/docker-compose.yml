@@ -1,0 +1,96 @@
+x-nexos:
+  name: GoAccess
+  tagline:
+    en: Real-time web log analyzer for Nginx Proxy Manager
+    it: Analizzatore di log in tempo reale per Nginx Proxy Manager
+  description:
+    en: |-
+      GoAccess is a real-time web log analyzer and interactive viewer that runs
+      in a browser. This variant is preconfigured for Nginx Proxy Manager logs
+      and provides live traffic statistics, top visitors, requests, referrers,
+      and browser breakdowns — all in a self-hosted dashboard.
+    it: |-
+      GoAccess è un analizzatore di log web in tempo reale con interfaccia browser.
+      Questa variante è preconfigurata per i log di Nginx Proxy Manager e fornisce
+      statistiche di traffico live, visitatori, richieste, referrer e breakdown
+      per browser — tutto in una dashboard self-hosted.
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/goaccess.svg
+  category: Monitoring
+  tags:
+    - logs
+    - analytics
+    - nginx
+    - monitoring
+  developer: xavierh
+  version: latest
+  port: 7880
+  repo: https://github.com/xavier-hernandez/goaccess-for-nginxproxymanager
+  env:
+    - name: TZ
+      description: Timezone
+      required: false
+      default: Europe/Rome
+    - name: PORT
+      description: Host port for the GoAccess web dashboard
+      required: true
+      default: "7880"
+      type: number
+    - name: BASIC_AUTH_USERNAME
+      description: Username for the web dashboard
+      required: true
+      default: admin
+    - name: BASIC_AUTH_PASSWORD
+      description: Password for the web dashboard
+      required: true
+      sensitive: true
+    - name: EXCLUDE_IPS
+      description: Comma-separated IPs to exclude from reports (e.g. your LAN)
+      required: false
+      default: "127.0.0.1"
+      hint: "Example: 127.0.0.1,192.168.1.1"
+    - name: HTML_REFRESH
+      description: Auto-refresh interval for the HTML report (seconds)
+      required: false
+      default: "5"
+      type: number
+      min: 1
+    - name: KEEP_LAST
+      description: Number of days to keep in storage
+      required: false
+      default: "15"
+      type: number
+      min: 1
+    - name: PROCESSING_THREADS
+      description: Number of log processing threads (set to number of CPU cores)
+      required: false
+      default: "1"
+      type: number
+      min: 1
+  volumes:
+    - container: /opt/log
+      description: "Nginx Proxy Manager logs directory (the 'logs' folder inside your NPM data path)"
+      required: true
+      hint: "Typically: /your/npm/data/logs"
+
+services:
+  goaccess:
+    image: xavierh/goaccess-for-nginxproxymanager:latest
+    container_name: goaccess
+    environment:
+      - TZ=${TZ}
+      - BASIC_AUTH=True
+      - BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
+      - BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
+      - EXCLUDE_IPS=${EXCLUDE_IPS}
+      - LOG_TYPE=NPM
+      - ENABLE_BROWSERS_LIST=True
+      - HTML_REFRESH=${HTML_REFRESH}
+      - KEEP_LAST=${KEEP_LAST}
+      - PROCESSING_THREADS=${PROCESSING_THREADS}
+      - SKIP_ARCHIVED_LOGS=False
+      - DEBUG=False
+    ports:
+      - "${PORT}:7880"
+    volumes:
+      - ???:/opt/log
+    restart: always

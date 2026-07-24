@@ -1,0 +1,168 @@
+x-nexos:
+  name: Paperless-NGX
+  tagline:
+    en: Scan, index and archive all your physical documents
+    it: Scansiona, indicizza e archivia tutti i tuoi documenti fisici
+  description:
+    en: |-
+      Paperless-NGX is a document management system that transforms your physical
+      documents into a searchable online archive. It automatically OCR-processes
+      scanned documents, extracts metadata, and lets you tag, search and retrieve
+      any document instantly.
+
+      Includes Gotenberg (PDF/HTML conversion) and Apache Tika (document parsing)
+      for broad format support. Drop files into the consume folder to have them
+      processed automatically.
+    it: |-
+      Paperless-NGX è un sistema di gestione documentale che trasforma i tuoi
+      documenti fisici in un archivio digitale ricercabile. Processa automaticamente
+      i documenti con OCR, estrae metadati e permette di taggare, cercare e
+      recuperare qualsiasi documento istantaneamente.
+
+      Include Gotenberg (conversione PDF/HTML) e Apache Tika (parsing documenti)
+      per supporto ai formati più diffusi. Trascina i file nella cartella consume
+      per l'elaborazione automatica.
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/paperless-ngx.svg
+  category: Productivity
+  tags:
+    - documents
+    - ocr
+    - archive
+    - paperless
+  developer: paperless-ngx
+  version: latest
+  license: GPL-3.0
+  port: 80
+  min_ram: "2GB"
+  website: https://docs.paperless-ngx.com
+  repo: https://github.com/paperless-ngx/paperless-ngx
+  docs: https://docs.paperless-ngx.com
+  env:
+    - name: HOST_PORT
+      description: Host port for the Paperless web interface
+      required: true
+      default: "80"
+      type: number
+    - name: TZ
+      description: Timezone
+      required: false
+      default: Europe/Rome
+    - name: PAPERLESS_SECRET_KEY
+      description: Secret key for session encryption — generate a random string
+      required: true
+      sensitive: true
+      hint: "Generate with: openssl rand -hex 32"
+    - name: PAPERLESS_URL
+      description: Public URL of your Paperless instance (used for links in emails)
+      required: false
+      type: url
+      placeholder: "https://paperless.yourdomain.com"
+    - name: PAPERLESS_ADMIN_USER
+      description: Initial admin username
+      required: true
+      default: admin
+    - name: PAPERLESS_ADMIN_PASSWORD
+      description: Initial admin password
+      required: true
+      sensitive: true
+    - name: PAPERLESS_OCR_LANGUAGE
+      description: Tesseract OCR language(s) — use + to combine multiple
+      required: false
+      default: ita+eng
+      hint: |
+        Examples: eng (English), ita (Italian), deu (German), fra (French)
+        Combine: ita+eng — full list: https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html
+    - name: DB_PASSWORD
+      description: Internal PostgreSQL password (used only between containers)
+      required: true
+      sensitive: true
+      default: paperless_db_secret
+  volumes:
+    - container: /usr/src/paperless/data
+      description: Paperless application data (index, thumbnails, classifier)
+      required: true
+      default: /var/lib/paperless/data
+    - container: /usr/src/paperless/media
+      description: Archived documents and originals
+      required: true
+      default: /var/lib/paperless/media
+    - container: /usr/src/paperless/consume
+      description: Inbox folder — drop documents here for automatic processing
+      required: true
+      default: /var/lib/paperless/consume
+    - container: /usr/src/paperless/export
+      description: Export destination folder
+      required: false
+      default: /var/lib/paperless/export
+    - container: /var/lib/postgresql/data
+      description: PostgreSQL database
+      required: true
+      default: /var/lib/paperless/db
+
+services:
+  broker:
+    image: docker.io/library/redis:7
+    container_name: paperless_broker
+    volumes:
+      - redisdata:/data
+    restart: unless-stopped
+
+  db:
+    image: docker.io/library/postgres:17
+    container_name: paperless_db
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ???:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+      - gotenberg
+      - tika
+    ports:
+      - "${HOST_PORT}:8000"
+    volumes:
+      - ???:/usr/src/paperless/data
+      - ???:/usr/src/paperless/media
+      - ???:/usr/src/paperless/consume
+      - ???:/usr/src/paperless/export
+    env_file:
+      - .env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBPASS: ${DB_PASSWORD}
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      PAPERLESS_URL: ${PAPERLESS_URL}
+      PAPERLESS_ADMIN_USER: ${PAPERLESS_ADMIN_USER}
+      PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
+      PAPERLESS_OCR_LANGUAGE: ${PAPERLESS_OCR_LANGUAGE}
+      PAPERLESS_TIME_ZONE: ${TZ}
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+
+  gotenberg:
+    image: docker.io/gotenberg/gotenberg:8.19
+    container_name: paperless_gotenberg
+    restart: unless-stopped
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+
+  tika:
+    image: docker.io/apache/tika:latest
+    container_name: paperless_tika
+    restart: unless-stopped
+
+volumes:
+  redisdata:
