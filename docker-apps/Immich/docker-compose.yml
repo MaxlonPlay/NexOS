@@ -17,16 +17,6 @@ x-nexos:
   port: 80
   min_ram: "4GB"
   env:
-    - name: UPLOAD_LOCATION
-      description: "Path on host where photos and videos will be stored"
-      path: true
-      required: true
-      default: /var/lib/immich/upload
-    - name: DB_DATA_LOCATION
-      description: "Path on host for the PostgreSQL database"
-      path: true
-      required: true
-      default: /var/lib/immich/db
     - name: IMMICH_VERSION
       description: "Immich version tag (leave 'release' for latest stable)"
       required: false
@@ -44,9 +34,17 @@ x-nexos:
       description: "PostgreSQL database name"
       required: true
       default: immich
-    - name: MODEL_CACHE_PATH
+  volumes:
+    - container: /data
+      description: "Path on host where photos and videos will be stored"
+      required: true
+      default: /var/lib/immich/upload
+    - container: /var/lib/postgresql/data
+      description: "Path on host for the PostgreSQL database"
+      required: true
+      default: /var/lib/immich/db
+    - container: /cache
       description: "Path on host for ML model cache (face recognition, CLIP)"
-      path: true
       required: true
       default: /var/lib/immich/model-cache
   features:
@@ -95,7 +93,7 @@ services:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     volumes:
-      - ${UPLOAD_LOCATION}:/data
+      - ???:/data
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
@@ -143,7 +141,7 @@ services:
       - 'c 189:* rmw'
     # x-nexos-endif
     volumes:
-      - ${MODEL_CACHE_PATH}:/cache
+      - ???:/cache
     env_file:
       - .env
     restart: always
@@ -166,7 +164,7 @@ services:
       POSTGRES_DB: ${DB_DATABASE_NAME}
       POSTGRES_INITDB_ARGS: '--data-checksums'
     volumes:
-      - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
+      - ???:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
 
