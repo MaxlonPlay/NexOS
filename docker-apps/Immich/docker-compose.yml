@@ -87,11 +87,48 @@ x-nexos:
           label: "Rockchip RKNN"
           description: "For Rockchip SoCs (RK3588, RK3566, etc.). Passes /dev/dri and USB devices."
           image_tag_suffix: "-rknn"
+    - id: hw_transcode
+      name: "Hardware Video Transcoding"
+      description: "Use GPU hardware for video transcoding in immich-server. Independent from ML acceleration."
+      type: select
+      default: none
+      options:
+        - value: none
+          label: "CPU only"
+          description: "Software transcoding — works on all hardware, higher CPU usage."
+        - value: vaapi
+          label: "Intel / AMD VAAPI"
+          description: "Hardware transcoding for Intel iGPUs and AMD GPUs. Passes /dev/dri to immich-server."
+        - value: nvenc
+          label: "NVIDIA NVENC"
+          description: "Hardware transcoding for NVIDIA GPUs. Requires nvidia-container-toolkit on the host."
+          env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              description: "Which NVIDIA GPUs to expose (for transcoding)"
+              required: true
+              default: all
+              hint: "'all' exposes every GPU. For a specific GPU use its UUID from: nvidia-smi -L"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              description: "NVIDIA driver capabilities passed to the container"
+              required: false
+              default: "compute,video,utility"
 
 services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    # x-nexos-if: hw_transcode=nvenc
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-all}
+      - NVIDIA_DRIVER_CAPABILITIES=${NVIDIA_DRIVER_CAPABILITIES:-compute,video,utility}
+    # x-nexos-endif
+    # x-nexos-if: hw_transcode=vaapi
+    devices:
+      - /dev/dri:/dev/dri
+    device_cgroup_rules:
+      - 'c 226:* rmw'
+    # x-nexos-endif
     volumes:
       - ???:/data
       - /etc/localtime:/etc/localtime:ro
