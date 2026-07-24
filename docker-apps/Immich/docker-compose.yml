@@ -44,11 +44,16 @@ x-nexos:
       required: true
       default: /var/lib/immich/db
     - container: /cache
-      description: "Path on host for ML model cache (face recognition, CLIP)"
-      required: true
+      description: "Path on host for ML model cache (face recognition, CLIP) — only used when ML is enabled"
+      required: false
       default: /var/lib/immich/model-cache
   features:
+    - id: enable_ml
+      name: "Machine Learning"
+      description: "Enable the machine-learning container for face recognition and CLIP-based smart search. Disable to save resources."
+      default: true
     - id: ml_accel
+      requires: enable_ml
       name: "ML Hardware Acceleration"
       description: "Hardware accelerator for machine learning (face recognition, CLIP search). Choose the option that matches your hardware."
       type: select
@@ -143,6 +148,7 @@ services:
     healthcheck:
       disable: false
 
+# x-nexos-if: enable_ml
   immich-machine-learning:
     container_name: immich_machine_learning
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}  # x-nexos-variant: ml_accel
@@ -184,6 +190,7 @@ services:
     restart: always
     healthcheck:
       disable: false
+# x-nexos-endif
 
   redis:
     container_name: immich_redis
