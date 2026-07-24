@@ -13,6 +13,7 @@ x-nexos:
 
       Primo accesso: username "admin", password stampata nei log del container al primo avvio. Esegui: docker logs qbittorrent | grep -i password — poi cambiala in Impostazioni → Interfaccia web.
   icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/qbittorrent.svg
+  thumbnail: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/qbittorrent.png
   screenshot_link:
     - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/qBittorrent/screenshot-1.png
     - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/qBittorrent/screenshot-2.png

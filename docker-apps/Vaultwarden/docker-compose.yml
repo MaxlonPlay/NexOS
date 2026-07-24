@@ -39,7 +39,7 @@ x-nexos:
       max: 65535
     - name: ADMIN_TOKEN
       description: Token for the /admin panel (Argon2id hash recommended)
-      required: false
+      required: true
       sensitive: true
       hint: |
         Generate a secure token with:

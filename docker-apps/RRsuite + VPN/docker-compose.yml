@@ -16,7 +16,7 @@ x-nexos:
       Seerr (opzionale) gira sulla propria rete come portale richieste per film e serie TV.
 
       Dopo l'installazione tutte le web UI sono sulle porte configurate. Collega qBittorrent / Sonarr / Radarr / Prowlarr tra loro usando hostname "gluetun" con le porte interne (8080, 8989, 7878, 9696).
-  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/webp/gluetun.webp
+  icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gluetun.svg
   category: Downloads
   tags:
     - vpn
@@ -45,12 +45,6 @@ x-nexos:
       hint: |
         Examples: protonvpn, mullvad, nordvpn, expressvpn, surfshark, private internet access
         Full list: https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers
-    - name: VPN_TYPE
-      description: VPN protocol
-      required: true
-      type: select
-      options: [wireguard, openvpn]
-      default: wireguard
     - name: SERVER_COUNTRIES
       description: VPN server country (comma-separated for multiple)
       required: false
@@ -99,39 +93,50 @@ x-nexos:
       default: "9696"
       type: number
   features:
-    - id: wireguard
+    - id: vpn_protocol
       name:
-        en: WireGuard credentials
-        it: Credenziali WireGuard
+        en: VPN protocol
+        it: Protocollo VPN
       description:
-        en: WireGuard private key from your VPN provider. Enable when VPN_TYPE is wireguard.
-        it: Chiave privata WireGuard del provider VPN. Attivare quando VPN_TYPE è wireguard.
-      default: true
-      env:
-        - name: WIREGUARD_PRIVATE_KEY
-          description: WireGuard private key (from provider dashboard)
-          required: true
-          sensitive: true
-        - name: WIREGUARD_ADDRESSES
-          description: Assigned WireGuard IP — required by some providers (e.g. Mullvad, AzireVPN)
-          required: false
-          hint: "Format: 10.x.x.x/32 — leave empty for ProtonVPN"
-    - id: openvpn
-      name:
-        en: OpenVPN credentials
-        it: Credenziali OpenVPN
-      description:
-        en: OpenVPN username and password. Enable when VPN_TYPE is openvpn.
-        it: Username e password OpenVPN. Attivare quando VPN_TYPE è openvpn.
-      default: false
-      env:
-        - name: OPENVPN_USER
-          description: OpenVPN username (from provider dashboard)
-          required: true
-        - name: OPENVPN_PASSWORD
-          description: OpenVPN password
-          required: true
-          sensitive: true
+        en: Choose the VPN protocol supported by your provider. WireGuard is faster; OpenVPN is more compatible.
+        it: Scegli il protocollo VPN supportato dal tuo provider. WireGuard è più veloce; OpenVPN è più compatibile.
+      type: select
+      default: wireguard
+      env_var: VPN_TYPE
+      options:
+        - value: wireguard
+          label: WireGuard
+          description:
+            en: Faster and more modern. Requires a WireGuard private key from your provider dashboard.
+            it: Più veloce e moderno. Richiede una chiave privata WireGuard dal pannello del provider.
+          env:
+            - name: WIREGUARD_PRIVATE_KEY
+              description:
+                en: WireGuard private key (from provider dashboard)
+                it: Chiave privata WireGuard (dal pannello del provider)
+              required: true
+              sensitive: true
+            - name: WIREGUARD_ADDRESSES
+              description:
+                en: Assigned WireGuard IP — required by some providers (e.g. Mullvad, AzireVPN)
+                it: IP WireGuard assegnato — richiesto da alcuni provider (es. Mullvad, AzireVPN)
+              required: false
+              hint: "Format: 10.x.x.x/32 — leave empty for ProtonVPN"
+        - value: openvpn
+          label: OpenVPN
+          description:
+            en: More compatible. Requires username and password from your provider dashboard.
+            it: Più compatibile. Richiede username e password dal pannello del provider.
+          env:
+            - name: OPENVPN_USER
+              description:
+                en: OpenVPN username (from provider dashboard)
+                it: Username OpenVPN (dal pannello del provider)
+              required: true
+            - name: OPENVPN_PASSWORD
+              description: OpenVPN password
+              required: true
+              sensitive: true
     - id: port_forwarding
       name:
         en: VPN port forwarding
@@ -204,11 +209,11 @@ services:
       - SERVER_COUNTRIES=${SERVER_COUNTRIES}
       - UPDATER_PERIOD=24h
       - BLOCK_MALICIOUS=off
-# x-nexos-if: wireguard
+# x-nexos-if: vpn_protocol=wireguard
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
 # x-nexos-endif
-# x-nexos-if: openvpn
+# x-nexos-if: vpn_protocol=openvpn
       - OPENVPN_USER=${OPENVPN_USER}
       - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - OPENVPN_CIPHERS=AES-256-GCM

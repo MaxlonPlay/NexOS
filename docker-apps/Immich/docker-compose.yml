@@ -1,0 +1,178 @@
+name: immich
+
+x-nexos:
+  name: Immich
+  tagline: "High-performance self-hosted photo and video management"
+  description: |
+    Immich is a self-hosted backup solution for photos and videos on mobile devices.
+    It supports automatic backup, face recognition, CLIP-based search, shared albums,
+    and much more — all running on your own hardware.
+  icon: https://raw.githubusercontent.com/immich-app/immich/main/design/immich-logo.svg
+  developer: immich-app
+  version: release
+  category: Media
+  website: https://immich.app
+  repo: https://github.com/immich-app/immich
+  docs: https://immich.app/docs
+  port: 80
+  min_ram: "4GB"
+  env:
+    - name: UPLOAD_LOCATION
+      description: "Path on host where photos and videos will be stored"
+      path: true
+      required: true
+      default: /var/lib/immich/upload
+    - name: DB_DATA_LOCATION
+      description: "Path on host for the PostgreSQL database"
+      path: true
+      required: true
+      default: /var/lib/immich/db
+    - name: IMMICH_VERSION
+      description: "Immich version tag (leave 'release' for latest stable)"
+      required: false
+      default: release
+    - name: DB_PASSWORD
+      description: "PostgreSQL password"
+      sensitive: true
+      required: true
+      default: immich_password
+    - name: DB_USERNAME
+      description: "PostgreSQL username"
+      required: true
+      default: postgres
+    - name: DB_DATABASE_NAME
+      description: "PostgreSQL database name"
+      required: true
+      default: immich
+  volumes:
+    - container: /data
+      description: "Photos and videos storage"
+      required: true
+      default: /var/lib/immich/upload
+    - container: /var/lib/postgresql/data
+      description: "PostgreSQL database storage"
+      required: true
+      default: /var/lib/immich/db
+  features:
+    - id: ml_accel
+      name: "ML Hardware Acceleration"
+      description: "Hardware accelerator for machine learning (face recognition, CLIP search). Choose the option that matches your hardware."
+      type: select
+      default: none
+      options:
+        - value: none
+          label: "CPU only"
+          description: "No hardware acceleration — compatible with all systems, higher CPU usage."
+        - value: openvino
+          label: "Intel OpenVINO"
+          description: "For Intel CPUs, integrated GPUs and NPUs. Passes /dev/dri to the container (VAAPI). Works on most modern Intel systems."
+          image_tag_suffix: "-openvino"
+        - value: cuda
+          label: "NVIDIA CUDA"
+          description: "For NVIDIA GPUs. Requires nvidia-container-toolkit installed on the host."
+          image_tag_suffix: "-cuda"
+          env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              description: "Which NVIDIA GPUs to expose to the container"
+              required: true
+              default: all
+              hint: "'all' exposes every GPU. For a specific GPU use its UUID from: nvidia-smi -L"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              description: "NVIDIA driver capabilities passed to the container"
+              required: false
+              default: "compute,video,utility"
+        - value: rocm
+          label: "AMD ROCm"
+          description: "For AMD GPUs (RX 6000+ series). Passes /dev/dri and /dev/kfd to the container."
+          image_tag_suffix: "-rocm"
+        - value: armnn
+          label: "ARM NN"
+          description: "For ARM-based devices (Raspberry Pi 5, Orange Pi, etc.)."
+          image_tag_suffix: "-armnn"
+        - value: rknn
+          label: "Rockchip RKNN"
+          description: "For Rockchip SoCs (RK3588, RK3566, etc.). Passes /dev/dri and USB devices."
+          image_tag_suffix: "-rknn"
+
+services:
+  immich-server:
+    container_name: immich_server
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    volumes:
+      - ${UPLOAD_LOCATION}:/data
+      - /etc/localtime:/etc/localtime:ro
+    env_file:
+      - .env
+    ports:
+      - '80:2283'
+    depends_on:
+      - redis
+      - database
+    restart: always
+    healthcheck:
+      disable: false
+
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}  # x-nexos-variant: ml_accel
+    # x-nexos-if: ml_accel=cuda
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-all}
+      - NVIDIA_DRIVER_CAPABILITIES=${NVIDIA_DRIVER_CAPABILITIES:-compute,video,utility}
+    # x-nexos-endif
+    # x-nexos-if: ml_accel=openvino
+    devices:
+      - /dev/dri:/dev/dri
+    device_cgroup_rules:
+      - 'c 226:* rmw'
+    # x-nexos-endif
+    # x-nexos-if: ml_accel=rocm
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/kfd:/dev/kfd
+    device_cgroup_rules:
+      - 'c 226:* rmw'
+    # x-nexos-endif
+    # x-nexos-if: ml_accel=armnn
+    devices:
+      - /dev/dri:/dev/dri
+    device_cgroup_rules:
+      - 'c 189:* rmw'
+    # x-nexos-endif
+    # x-nexos-if: ml_accel=rknn
+    devices:
+      - /dev/dri:/dev/dri
+    device_cgroup_rules:
+      - 'c 189:* rmw'
+    # x-nexos-endif
+    volumes:
+      - /immich/model-cache:/cache
+    env_file:
+      - .env
+    restart: always
+    healthcheck:
+      disable: false
+
+  redis:
+    container_name: immich_redis
+    image: docker.io/valkey/valkey:9@sha256:fb8d272e529ea567b9bf1302245796f21a2672b8368ca3fcb938ac334e613c8f
+    healthcheck:
+      test: redis-cli ping || exit 1
+    restart: always
+
+  database:
+    container_name: immich_postgres
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+      POSTGRES_INITDB_ARGS: '--data-checksums'
+    volumes:
+      - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
+    shm_size: 128mb
+    restart: always
+
+volumes:
+  model-cache:

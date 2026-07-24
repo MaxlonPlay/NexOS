@@ -7,6 +7,7 @@ x-nexos:
     en: Transmission is a fast, lightweight and open-source BitTorrent client with a clean web interface accessible from any browser. It supports magnet links, DHT, PEX, peer encryption, bandwidth scheduling and watch folders for automatic torrent additions. Minimal resource usage makes it ideal for always-on servers.
     it: Transmission è un client BitTorrent veloce, leggero e open-source con un'interfaccia web accessibile da qualsiasi browser. Supporta link magnet, DHT, PEX, cifratura peer, pianificazione della banda e cartelle di monitoraggio per l'aggiunta automatica dei torrent. Il consumo minimo di risorse lo rende ideale per server sempre accesi.
   icon: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/transmission.svg
+  thumbnail: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/transmission.png
   screenshot_link:
     - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Transmission/screenshot-1.png
     - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Transmission/screenshot-2.png
