@@ -44,6 +44,11 @@ x-nexos:
       description: "PostgreSQL database name"
       required: true
       default: immich
+    - name: MODEL_CACHE_PATH
+      description: "Path on host for ML model cache (face recognition, CLIP)"
+      path: true
+      required: true
+      default: /var/lib/immich/model-cache
   features:
     - id: ml_accel
       name: "ML Hardware Acceleration"
@@ -138,7 +143,7 @@ services:
       - 'c 189:* rmw'
     # x-nexos-endif
     volumes:
-      - /immich/model-cache:/cache
+      - ${MODEL_CACHE_PATH}:/cache
     env_file:
       - .env
     restart: always
@@ -165,5 +170,3 @@ services:
     shm_size: 128mb
     restart: always
 
-volumes:
-  model-cache:
