@@ -61,8 +61,6 @@ services:
 # x-nexos-if: reverse_proxy
       - TRUST_PROXY=true
 # x-nexos-endif
-# x-nexos-if: reverse_proxy
-# x-nexos-endif
     volumes:
       - ${DATA_PATH}:/opt/app/backend/data
       - ${DATA_PATH}/images:/opt/app/frontend/public/img
