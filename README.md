@@ -1,6 +1,6 @@
 # <img src="logo.png" alt="NexOS" width="32" style="vertical-align:middle"> NexOS
 
-A web-based management interface for Linux systems with ZFS storage. NexOS lets you administer your server entirely from a browser — no command line required.
+NexOS is a web-based management platform for Linux servers designed to simplify and centralize your storage administration. Configure and monitor your infrastructure directly from the browser: whether using ZFS, software RAID with mdadm, LVM, or filesystems like ext4 and Btrfs (coming soon), manage every layer without touching the command line.
 
 ![Dashboard](dashboard.png)
 
@@ -10,17 +10,19 @@ A web-based management interface for Linux systems with ZFS storage. NexOS lets 
 
 NexOS provides a unified control panel for the tasks that normally require juggling multiple CLI tools:
 
-- **ZFS storage** — create and manage pools, datasets, volumes, and snapshots; run scrubs, TRIM, resilver, and replace operations
+- **Storage management** — create and manage ZFS pools, mdadm software RAID arrays, LVM volume groups, and logical volumes; format and mount ext4 and Btrfs (coming soon) filesystems; handle ZFS datasets, snapshots, scrubs, TRIM, resilvering, and disk replacements
 - **Disk management** — partition, format, mount, and unmount physical disks and USB drives; view SMART data and temperature history
+- **App Store** — discover, install, and manage native apps built specifically for the NexOS platform
+- **Multi-user & Granular Permissions** — support for admin and standard users with fine-grained, fully customizable permission controls for admin roles (not just all-or-nothing access)
+- **Network shares** — easily configure simple network shares via SMB and NFS; manage Samba users, groups, and global settings
+- **Network mounts** — mount remote SMB/NFS resources and persist them across reboots
 - **File manager** — browse, upload, download, copy, move, rename, and archive files directly in the browser; built-in text editor
 - **Restic backups** — schedule encrypted backups to local or remote repositories with pre/post script support; browse and restore snapshots
-- **Network shares** — configure SMB and NFS exports; manage Samba users, groups, and global settings
-- **Network mounts** — mount remote SMB/NFS resources and persist them across reboots
 - **Download manager** — queue HTTP, magnet, and torrent downloads via aria2; manage active transfers in real time
-- **Scheduler** — automate ZFS operations and dataset tasks with a cron-based scheduler
+- **Scheduler** — automate storage maintenance operations and tasks with a cron-based scheduler
 - **System monitoring** — live I/O, CPU, RAM, network, and ARC statistics via real-time streams
 - **Console** — full interactive terminal session in the browser
-- **Notifications** — event alerts delivered via Telegram or email; configurable per event type
+- **Real-time notifications** — instant event alerts delivered via email or your own custom Telegram bot, with per-event configuration
 - **Settings backup** — export and restore your entire NexOS configuration to an encrypted `.nexbak` file
 - **Updates** — check for and install new releases directly from the interface
 
@@ -28,7 +30,7 @@ NexOS provides a unified control panel for the tasks that normally require juggl
 
 ## Who it is for
 
-NexOS is designed for anyone running a Linux server with ZFS who wants a clean web interface instead of a terminal. It works equally well on a home NAS, a Proxmox host, or a dedicated server.
+NexOS is built for anyone running a Linux server who wants a clean, modern web interface instead of relying on the terminal. Whether you are managing complex ZFS pools, mdadm software RAID, LVM volumes, or standard filesystems, NexOS fits seamlessly on a home NAS, a Proxmox host, a home lab, or a dedicated bare-metal server.
 
 ---
 
@@ -58,20 +60,14 @@ NexOS is built with security as a first-class requirement.
 | Fedora 42+ | ✅ Potentially compatible |
 | Arch Linux | ✅ Potentially compatible |
 
-Any Linux distribution with systemd and OpenZFS should work.
+Any Linux distribution with systemd should work.
 
 ---
 
 ## Requirements
 
 - Linux with **systemd**
-- **ZFS** kernel modules (OpenZFS)
-- **root** access (required for ZFS and disk operations)
-- A modern browser
-
-Optional:
-- `aria2` for the download manager (`apt install aria2` / `dnf install aria2`)
-- `restic` for backups (the interface can install it automatically)
+- **root** access (required for ZFS/MDADM and disk operations)
 
 ---
 
@@ -105,8 +101,7 @@ The installer will guide you through a short wizard:
 | Connection mode | Native HTTPS · HTTPS via reverse proxy · Plain HTTP |
 | Certificate | Auto-generate self-signed or provide your own cert/key |
 | Port | Listening port (default: `8000`) |
-| File manager root | Which path to expose (default: `/`) and protection mode |
-| Allowed origins | Restrict access to specific hostnames or IPs (optional) |
+| File manager | protection mode |
 
 When finished, NexOS is installed as a systemd service and starts automatically.
 
@@ -123,7 +118,6 @@ On first login you will be prompted to create your admin credentials.
 systemctl status nexos      # current status and memory usage
 systemctl restart nexos     # restart
 systemctl stop nexos        # stop
-journalctl -u nexos -f      # live logs
 ```
 
 ---
@@ -141,35 +135,17 @@ systemctl restart nexos
 
 | Variable | Default | Description |
 |---|---|---|
-| `HTTPS_ENABLED` | `true` | Enable HTTPS |
-| `SECURE_COOKIES` | `true` | Mark session cookies as Secure (set to `false` for plain HTTP) |
 | `AUTO_SSL` | `true` | Auto-generate a self-signed certificate |
+| `SSL_HOSTNAME` | `local ip server` | Automatically detected |
 | `SSL_CERTFILE` | — | Path to a custom certificate PEM file |
 | `SSL_KEYFILE` | — | Path to the matching private key PEM file |
 | `SSL_HOSTNAME` | — | Extra IPs or hostnames to include in the self-signed cert SAN |
-
-### Access control
-
-| Variable | Default | Description |
-|---|---|---|
-| `ALLOWED_ORIGINS` | *(any)* | Comma-separated hostnames or IPs allowed to connect; requests from unlisted hosts are rejected |
-| `TRUSTED_PROXY` | `false` | Set to `true` when running behind a reverse proxy (nginx, Caddy, Traefik) to trust `X-Forwarded-For` |
 
 ### File manager
 
 | Variable | Default | Description |
 |---|---|---|
-| `FILE_ROOT` | `/` | Root path exposed in the file manager |
-| `FILE_ROOTS` | — | Alternative to `FILE_ROOT`: comma-separated list of paths for multi-root mode |
 | `FILE_MANAGER_PROTECTION` | `strict` | `strict` blocks writes to system paths; `permissive` allows editing anywhere under the root |
-
-### Downloads
-
-| Variable | Default | Description |
-|---|---|---|
-| `DOWNLOAD_SAVE_PATH` | `/var/lib/nexos/downloads` | Default save directory for downloads |
-| `DOWNLOAD_MAX_CONCURRENT` | `4` | Maximum simultaneous downloads |
-| `DOWNLOAD_MAX_CONNECTIONS` | `4` | Maximum connections per download |
 
 ### Terminal
 
@@ -177,15 +153,7 @@ systemctl restart nexos
 |---|---|---|
 | `CONSOLE_SHELL` | `/bin/bash` | Shell to launch in the browser terminal |
 | `CONSOLE_IDLE_TIMEOUT` | `1800` | Seconds of inactivity before the session is closed |
-| `CONSOLE_MAX_SESSION` | `3600` | Maximum session lifetime in seconds |
 | `CONSOLE_TOKEN_REVALIDATION` | `60` | How often (in seconds) the session token is re-checked |
-
-### Paths
-
-| Variable | Default | Description |
-|---|---|---|
-| `NEXOS_DATA_DIR` | `/var/lib/nexos` | Directory for the database, scripts, and runtime data |
-| `NFS_EXPORTS_FILE` | `/etc/exports` | Path to the NFS exports file |
 
 ### Security
 
