@@ -57,10 +57,8 @@ NexOS is built with security as a first-class requirement.
 | Proxmox VE 9+ | ✅ Tested |
 | Debian 13+ | ✅ Tested |
 | Ubuntu 24.04+ | ✅ Tested |
-| Fedora 42+ | ✅ Potentially compatible |
-| Arch Linux | ✅ Potentially compatible |
-
-Any Linux distribution with systemd should work.
+| Fedora 42+ | ❌ NOT TESTED Potentially compatible |
+| Arch Linux | ❌ NOT TESTED Potentially compatible |
 
 ---
 
@@ -152,7 +150,6 @@ systemctl restart nexos
 | Variable | Default | Description |
 |---|---|---|
 | `CONSOLE_SHELL` | `/bin/bash` | Shell to launch in the browser terminal |
-| `CONSOLE_IDLE_TIMEOUT` | `1800` | Seconds of inactivity before the session is closed |
 | `CONSOLE_TOKEN_REVALIDATION` | `60` | How often (in seconds) the session token is re-checked |
 
 ### Security
