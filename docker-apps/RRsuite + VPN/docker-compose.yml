@@ -37,6 +37,11 @@ x-nexos:
     - arm64
   website: https://github.com/qdm12/gluetun
   docs: https://github.com/qdm12/gluetun-wiki
+  template_version: 2
+  post_install:
+    notes:
+      en: "Web interfaces: qBittorrent on port {QBIT_PORT}, Sonarr {SONARR_PORT}, Radarr {RADARR_PORT}, Prowlarr {PROWLARR_PORT}."
+      it: "Interfacce web: qBittorrent sulla porta {QBIT_PORT}, Sonarr {SONARR_PORT}, Radarr {RADARR_PORT}, Prowlarr {PROWLARR_PORT}."
   env:
     - name: VPN_SERVICE_PROVIDER
       description: VPN provider name
@@ -51,14 +56,16 @@ x-nexos:
       default: Netherlands
       hint: "Examples: Netherlands — Switzerland — \"Netherlands,Switzerland\""
     - name: TZ
+      detect: timezone
       description: Timezone for all services
       required: false
       default: Europe/Rome
     - name: PUID
+      gid_var: PGID
       description: User ID for file permissions
       required: false
       default: "1000"
-      type: number
+      type: user
     - name: PGID
       description: Group ID for file permissions
       required: false
@@ -76,22 +83,22 @@ x-nexos:
       description: qBittorrent web UI port
       required: true
       default: "8080"
-      type: number
+      type: port
     - name: SONARR_PORT
       description: Sonarr web UI port
       required: true
       default: "8989"
-      type: number
+      type: port
     - name: RADARR_PORT
       description: Radarr web UI port
       required: true
       default: "7878"
-      type: number
+      type: port
     - name: PROWLARR_PORT
       description: Prowlarr web UI port
       required: true
       default: "9696"
-      type: number
+      type: port
   features:
     - id: vpn_protocol
       name:
@@ -158,7 +165,7 @@ x-nexos:
           description: Seerr web UI port
           required: true
           default: "5055"
-          type: number
+          type: port
     - id: firefox
       name:
         en: Firefox in VPN
@@ -172,12 +179,12 @@ x-nexos:
           description: Firefox primary web UI port
           required: true
           default: "3000"
-          type: number
+          type: port
         - name: FIREFOX_PORT_2
           description: Firefox secondary web UI port
           required: true
           default: "3001"
-          type: number
+          type: port
   volumes:
     - container: /gluetun
       description: Gluetun VPN data, credentials and server lists
@@ -191,8 +198,6 @@ x-nexos:
     - container: /tv
       description: TV shows library (Sonarr)
       required: true
-
-version: "3.8"
 
 services:
   gluetun:

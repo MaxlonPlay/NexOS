@@ -39,14 +39,17 @@ x-nexos:
   website: https://transmissionbt.com
   repo: https://github.com/transmission/transmission
   docs: https://github.com/transmission/transmission/wiki
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /
   env:
     - name: HOST_PORT
       description: Host port for the Transmission web interface
       required: true
       default: "9091"
-      type: number
-      min: 1
-      max: 65535
+      type: port
     - name: PEERPORT
       description: BitTorrent peer port used for incoming connections (TCP and UDP)
       hint: |
@@ -54,20 +57,20 @@ x-nexos:
         The same value is applied both to the Transmission setting and the host port mapping.
       required: true
       default: "51413"
-      type: number
-      min: 1024
-      max: 65535
+      type: port
     - name: PUID
+      gid_var: PGID
       description: UID of the user that owns your download files
       required: false
       default: "1000"
-      type: number
+      type: user
     - name: PGID
       description: GID of the user that owns your download files
       required: false
       default: "1000"
       type: number
     - name: TZ
+      detect: timezone
       description: Timezone
       required: false
       default: Europe/Rome
@@ -90,8 +93,6 @@ x-nexos:
     - container: /watch
       description: Watch folder — .torrent files placed here are added automatically (optional)
       required: false
-
-version: "3.8"
 
 services:
   transmission:

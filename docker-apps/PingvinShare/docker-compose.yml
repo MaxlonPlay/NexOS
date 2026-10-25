@@ -28,12 +28,17 @@ x-nexos:
   website: https://pingvin-share.dev.eliasschneider.com
   repo: https://github.com/stonith404/pingvin-share
   docs: https://github.com/stonith404/pingvin-share#readme
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /
   env:
     - name: HOST_PORT
       description: Host port for the Pingvin Share web interface
       required: true
       default: "3000"
-      type: number
+      type: port
     - name: DATA_PATH
       description: Host directory where all Pingvin data and uploads will be stored
       required: true
@@ -58,6 +63,7 @@ services:
     ports:
       - "${HOST_PORT}:3000"
 # x-nexos-if: reverse_proxy
+    environment:
       - TRUST_PROXY=true
 # x-nexos-endif
     volumes:

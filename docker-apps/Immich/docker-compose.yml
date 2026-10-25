@@ -16,12 +16,23 @@ x-nexos:
   docs: https://immich.app/docs
   port: 80
   min_ram: "4GB"
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /
   env:
+    - name: HOST_PORT
+      description: Host port for the Immich web interface
+      required: true
+      default: "2283"
+      type: port
     - name: IMMICH_VERSION
       description: "Immich version tag (leave 'release' for latest stable)"
       required: false
       default: release
     - name: DB_PASSWORD
+      generate: password
       description: "PostgreSQL password"
       sensitive: true
       required: true
@@ -63,10 +74,12 @@ x-nexos:
           label: "CPU only"
           description: "No hardware acceleration — compatible with all systems, higher CPU usage."
         - value: openvino
+          requires_hw: [dri]
           label: "Intel OpenVINO"
           description: "For Intel CPUs, integrated GPUs and NPUs. Passes /dev/dri to the container (VAAPI). Works on most modern Intel systems."
           image_tag_suffix: "-openvino"
         - value: cuda
+          requires_hw: [nvidia]
           label: "NVIDIA CUDA"
           description: "For NVIDIA GPUs. Requires nvidia-container-toolkit installed on the host."
           image_tag_suffix: "-cuda"
@@ -81,6 +94,7 @@ x-nexos:
               required: false
               default: "compute,video,utility"
         - value: rocm
+          requires_hw: [kfd, dri]
           label: "AMD ROCm"
           description: "For AMD GPUs (RX 6000+ series). Passes /dev/dri and /dev/kfd to the container."
           image_tag_suffix: "-rocm"
@@ -102,9 +116,11 @@ x-nexos:
           label: "CPU only"
           description: "Software transcoding — works on all hardware, higher CPU usage."
         - value: vaapi
+          requires_hw: [dri]
           label: "Intel / AMD VAAPI"
           description: "Hardware transcoding for Intel iGPUs and AMD GPUs. Passes /dev/dri to immich-server."
         - value: nvenc
+          requires_hw: [nvidia]
           label: "NVIDIA NVENC"
           description: "Hardware transcoding for NVIDIA GPUs. Requires nvidia-container-toolkit on the host."
           env:
@@ -140,7 +156,7 @@ services:
     env_file:
       - .env
     ports:
-      - '80:2283'
+      - "${HOST_PORT}:2283"
     depends_on:
       - redis
       - database

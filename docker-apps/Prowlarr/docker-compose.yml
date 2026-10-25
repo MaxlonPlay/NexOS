@@ -29,25 +29,30 @@ x-nexos:
   repo: https://github.com/Prowlarr/Prowlarr
   support: https://wiki.servarr.com/prowlarr/troubleshooting
   docs: https://wiki.servarr.com/prowlarr
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /
   env:
     - name: HOST_PORT
       description: Host port to expose Prowlarr on
       required: true
       default: "9696"
-      type: number
-      min: 1
-      max: 65535
+      type: port
     - name: PUID
+      gid_var: PGID
       description: User ID to run the process as
       required: false
       default: "1000"
-      type: number
+      type: user
     - name: PGID
       description: Group ID to run the process as
       required: false
       default: "1000"
       type: number
     - name: TZ
+      detect: timezone
       description: Timezone (e.g. Europe/Rome)
       required: false
       default: Europe/Rome

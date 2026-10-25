@@ -29,22 +29,23 @@ x-nexos:
   website: https://nextcloud.com
   repo: https://github.com/nextcloud/all-in-one
   docs: https://github.com/nextcloud/all-in-one#how-to-use-this
+  template_version: 2
+  web:
+    port: AIO_HTTP_PORT
+    scheme: https
+    path: /
   env:
     - name: AIO_HTTP_PORT
       description: Port for the AIO admin interface
       required: true
       default: "8080"
-      type: number
-      min: 1
-      max: 65535
+      type: port
     - name: APACHE_PORT
       description: Port on which Nextcloud is exposed by Apache
       hint: Must be free on the host. Usually 11000 or any high port of your choice.
       required: true
       default: "11000"
-      type: number
-      min: 1024
-      max: 65535
+      type: port
     - name: NEXTCLOUD_CONFIG_DIR
       description: Host folder for Nextcloud AIO configuration
       hint: "E.g. /opt/nextcloud/config — must exist before starting."
@@ -55,8 +56,6 @@ x-nexos:
       hint: "Choose a folder on a large disk. E.g. /mnt/storage/nextcloud/data"
       path: true
       required: true
-
-version: "3.8"
 
 services:
   nextcloud-aio-mastercontainer:

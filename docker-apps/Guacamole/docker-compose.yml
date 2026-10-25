@@ -25,15 +25,23 @@ x-nexos:
   website: https://guacamole.apache.org
   repo: https://github.com/apache/guacamole-server
   docs: https://guacamole.apache.org/doc/gug/
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /guacamole
+  post_install:
+    notes:
+      en: "Sign in with guacadmin / guacadmin and change the password immediately."
+      it: "Accedi con guacadmin / guacadmin e cambia subito la password."
   env:
     - name: HOST_PORT
       description: Host port for the Guacamole web interface
       required: true
       default: "8080"
-      type: number
-      min: 1
-      max: 65535
+      type: port
     - name: TZ
+      detect: timezone
       description: Server timezone
       required: false
       default: Europe/Rome
@@ -50,8 +58,6 @@ x-nexos:
     - container: /config
       description: Guacamole configuration, database and extensions
       required: true
-
-version: "3"
 
 services:
   guacamole:

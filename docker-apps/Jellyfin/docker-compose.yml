@@ -42,25 +42,30 @@ x-nexos:
   website: https://jellyfin.org
   repo: https://github.com/jellyfin/jellyfin
   docs: https://jellyfin.org/docs
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /
   env:
     - name: HOST_PORT
       description: Host port for the Jellyfin web interface
       required: true
       default: "8096"
-      type: number
-      min: 1
-      max: 65535
+      type: port
     - name: PUID
+      gid_var: PGID
       description: UID of the user that owns your media files
       required: false
       default: "1000"
-      type: number
+      type: user
     - name: PGID
       description: GID of the user that owns your media files
       required: false
       default: "1000"
       type: number
     - name: TZ
+      detect: timezone
       description: Timezone (e.g. Europe/Rome)
       required: false
       default: Europe/Rome
@@ -72,6 +77,7 @@ x-nexos:
       placeholder: https://jellyfin.yourdomain.com
   features:
     - id: hw_accel_igpu
+      requires_hw: [dri]
       name:
         en: iGPU Acceleration — Intel or AMD
         it: Accelerazione iGPU — Intel o AMD
@@ -90,15 +96,13 @@ x-nexos:
           required: true
           default: Intel — Quick Sync (QSV)
         - name: RENDER_GID
+          detect: render_gid
           description: GID of the 'render' group on the host
           required: true
           default: "103"
           type: number
-          hint: |
-            Find the correct GID on your server:
-              getent group render | cut -d: -f3
-            Common values: 103 (Debian/Ubuntu), 105 (some distros).
     - id: hw_accel_nvidia
+      requires_hw: [nvidia]
       name:
         en: NVIDIA GPU Acceleration
         it: Accelerazione GPU NVIDIA
@@ -134,8 +138,6 @@ x-nexos:
         label: TV Shows
       - container: /music
         label: Music
-
-version: "3.8"
 
 services:
   jellyfin:

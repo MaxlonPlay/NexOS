@@ -37,17 +37,28 @@ x-nexos:
   website: https://docs.paperless-ngx.com
   repo: https://github.com/paperless-ngx/paperless-ngx
   docs: https://docs.paperless-ngx.com
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /
+  post_install:
+    notes:
+      en: "Sign in with {PAPERLESS_ADMIN_USER} / {PAPERLESS_ADMIN_PASSWORD}."
+      it: "Accedi con {PAPERLESS_ADMIN_USER} / {PAPERLESS_ADMIN_PASSWORD}."
   env:
     - name: HOST_PORT
       description: Host port for the Paperless web interface
       required: true
       default: "80"
-      type: number
+      type: port
     - name: TZ
+      detect: timezone
       description: Timezone
       required: false
       default: Europe/Rome
     - name: PAPERLESS_SECRET_KEY
+      generate: {type: hex, length: 32}
       description: Secret key for session encryption — generate a random string
       required: true
       sensitive: true
@@ -62,6 +73,7 @@ x-nexos:
       required: true
       default: admin
     - name: PAPERLESS_ADMIN_PASSWORD
+      generate: password
       description: Initial admin password
       required: true
       sensitive: true
@@ -73,6 +85,7 @@ x-nexos:
         Examples: eng (English), ita (Italian), deu (German), fra (French)
         Combine: ita+eng — full list: https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html
     - name: DB_PASSWORD
+      generate: password
       description: Internal PostgreSQL password (used only between containers)
       required: true
       sensitive: true

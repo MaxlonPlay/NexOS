@@ -44,16 +44,24 @@ x-nexos:
     - https://nginxproxymanager.com/screenshots/proxy-hosts-add.png
     - https://nginxproxymanager.com/screenshots/redirection-hosts.png
     - https://nginxproxymanager.com/screenshots/certificates.png
+  template_version: 2
+  web:
+    port: ADMIN_PORT
+    scheme: http
+    path: /
+  post_install:
+    notes:
+      en: "First sign-in: admin@example.com / changeme — you will be asked to change them."
+      it: "Primo accesso: admin@example.com / changeme — ti verrà chiesto di cambiarli."
   env:
     - name: ADMIN_PORT
       description: Admin web UI port
       required: true
       default: "81"
-      type: number
-      min: 1
-      max: 65535
+      type: port
       hint: "Ports 80 and 443 are fixed — they handle all proxied traffic."
     - name: TZ
+      detect: timezone
       description: Timezone
       required: false
       default: Europe/Rome
@@ -64,8 +72,6 @@ x-nexos:
     - container: /etc/letsencrypt
       description: Let's Encrypt certificates (renewed automatically)
       required: true
-
-version: "3.8"
 
 services:
   app:

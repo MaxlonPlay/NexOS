@@ -24,20 +24,24 @@ x-nexos:
   website: https://docmost.com
   repo: https://github.com/docmost/docmost
   docs: https://docmost.com/docs
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /
   env:
     - name: HOST_PORT
       description: Host port to expose Docmost on
       required: true
       default: "3000"
-      type: number
-      min: 1
-      max: 65535
+      type: port
     - name: APP_URL
       description: Full public URL including protocol (e.g. https://wiki.yourdomain.com)
       type: url
       required: true
       hint: Must start with http:// or https:// — the app will not start without a valid URL.
     - name: APP_SECRET
+      generate: {type: hex, length: 32}
       description: Application secret key (used for sessions and encryption)
       sensitive: true
       required: true
@@ -76,8 +80,6 @@ x-nexos:
     - container: /data
       description: Redis cache data
       required: false
-
-version: "3"
 
 services:
   docmost:

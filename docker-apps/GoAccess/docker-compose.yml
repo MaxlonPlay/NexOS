@@ -25,8 +25,18 @@ x-nexos:
   version: latest
   port: 7880
   repo: https://github.com/xavier-hernandez/goaccess-for-nginxproxymanager
+  template_version: 2
+  web:
+    port: PORT
+    scheme: http
+    path: /
+  post_install:
+    notes:
+      en: "Sign in with {BASIC_AUTH_USERNAME} / {BASIC_AUTH_PASSWORD}."
+      it: "Accedi con {BASIC_AUTH_USERNAME} / {BASIC_AUTH_PASSWORD}."
   env:
     - name: TZ
+      detect: timezone
       description: Timezone
       required: false
       default: Europe/Rome
@@ -34,12 +44,13 @@ x-nexos:
       description: Host port for the GoAccess web dashboard
       required: true
       default: "7880"
-      type: number
+      type: port
     - name: BASIC_AUTH_USERNAME
       description: Username for the web dashboard
       required: true
       default: admin
     - name: BASIC_AUTH_PASSWORD
+      generate: password
       description: Password for the web dashboard
       required: true
       sensitive: true

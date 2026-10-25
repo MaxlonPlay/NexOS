@@ -45,14 +45,21 @@ x-nexos:
   website: https://www.qbittorrent.org
   repo: https://github.com/qbittorrent/qBittorrent
   docs: https://github.com/qbittorrent/qBittorrent/wiki
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /
+  post_install:
+    notes:
+      en: "The temporary admin password is printed in the container log: change it in Tools → Options → Web UI."
+      it: "La password temporanea di admin è nel log del container: cambiala in Strumenti → Opzioni → Interfaccia web."
   env:
     - name: HOST_PORT
       description: Host port for the qBittorrent web interface
       required: true
       default: "8080"
-      type: number
-      min: 1
-      max: 65535
+      type: port
     - name: PEERPORT
       description: BitTorrent peer port for incoming connections (TCP and UDP)
       hint: |
@@ -60,20 +67,20 @@ x-nexos:
         The same value is applied both to the qBittorrent setting and the host port mapping.
       required: true
       default: "6881"
-      type: number
-      min: 1024
-      max: 65535
+      type: port
     - name: PUID
+      gid_var: PGID
       description: UID of the user that owns your download files
       required: false
       default: "1000"
-      type: number
+      type: user
     - name: PGID
       description: GID of the user that owns your download files
       required: false
       default: "1000"
       type: number
     - name: TZ
+      detect: timezone
       description: Timezone
       required: false
       default: Europe/Rome
@@ -85,8 +92,6 @@ x-nexos:
     - container: /downloads
       description: Directory where completed and in-progress downloads are stored
       required: true
-
-version: "3.8"
 
 services:
   qbittorrent:

@@ -29,22 +29,31 @@ x-nexos:
   website: https://github.com/dani-garcia/vaultwarden
   repo: https://github.com/dani-garcia/vaultwarden
   docs: https://github.com/dani-garcia/vaultwarden/wiki
+  template_version: 2
+  web:
+    port: HOST_PORT
+    scheme: http
+    path: /
+  post_install:
+    notes:
+      en: "Admin panel: /admin — password {ADMIN_PASSWORD}. Keep it: it is not saved in clear text."
+      it: "Pannello di amministrazione: /admin — password {ADMIN_PASSWORD}. Conservala: non viene salvata in chiaro."
   env:
     - name: HOST_PORT
       description: Host port to expose Vaultwarden on
       required: true
       default: "6821"
-      type: number
-      min: 1
-      max: 65535
+      type: port
+    - name: ADMIN_PASSWORD
+      description: Password for the /admin panel (only its Argon2 hash is saved)
+      required: false
+      sensitive: true
+      generate: password
     - name: ADMIN_TOKEN
-      description: Token for the /admin panel (Argon2id hash recommended)
+      generate: {type: argon2, from: ADMIN_PASSWORD}
+      description: Argon2id hash of ADMIN_PASSWORD, computed automatically
       required: true
       sensitive: true
-      hint: |
-        Generate a secure token with:
-        echo -n 'YOUR_PASSWORD' | argon2 $(openssl rand -hex 8) -e
-        Leave empty to disable the admin panel.
   volumes:
     - container: /data
       description: Vaultwarden data directory (vault, attachments, database)

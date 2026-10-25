@@ -27,18 +27,25 @@ x-nexos:
   website: https://heimdall.site
   repo: https://github.com/linuxserver/Heimdall
   docs: https://github.com/linuxserver/Heimdall/wiki
+  template_version: 2
+  web:
+    port: HTTP_PORT
+    scheme: http
+    path: /
   env:
     - name: PUID
+      gid_var: PGID
       description: User ID for file permissions
       required: false
       default: "1000"
-      type: number
+      type: user
     - name: PGID
       description: Group ID for file permissions
       required: false
       default: "1000"
       type: number
     - name: TZ
+      detect: timezone
       description: Timezone
       required: false
       default: Europe/Rome
@@ -46,12 +53,12 @@ x-nexos:
       description: HTTP port exposed on the host
       required: true
       default: "80"
-      type: number
+      type: port
     - name: HTTPS_PORT
       description: HTTPS port exposed on the host
       required: true
       default: "443"
-      type: number
+      type: port
   volumes:
     - container: /config
       description: Heimdall configuration and database
