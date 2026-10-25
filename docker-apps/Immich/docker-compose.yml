@@ -3,10 +3,9 @@ name: immich
 x-nexos:
   name: Immich
   tagline: "High-performance self-hosted photo and video management"
-  description: |
-    Immich is a self-hosted backup solution for photos and videos on mobile devices.
-    It supports automatic backup, face recognition, CLIP-based search, shared albums,
-    and much more — all running on your own hardware.
+  description:
+    en: "Immich is a self-hosted backup solution for photos and videos on mobile devices.\nIt supports automatic backup, face recognition, CLIP-based search, shared albums,\nand much more — all running on your own hardware."
+    it: "Immich è una soluzione self-hosted per il backup di foto e video dei dispositivi mobili.\nSupporta backup automatico, riconoscimento dei volti, ricerca CLIP, album condivisi\ne molto altro, tutto sul tuo hardware."
   icon: https://raw.githubusercontent.com/immich-app/immich/main/design/immich-logo.svg
   developer: immich-app
   version: release
@@ -23,114 +22,170 @@ x-nexos:
     path: /
   env:
     - name: HOST_PORT
-      description: Host port for the Immich web interface
+      description:
+        en: "Host port for the Immich web interface"
+        it: "Porta dell'host per l'interfaccia web di Immich"
       required: true
       default: "2283"
       type: port
     - name: IMMICH_VERSION
-      description: "Immich version tag (leave 'release' for latest stable)"
+      description:
+        en: "Immich version tag (leave 'release' for latest stable)"
+        it: "Versione di Immich (lascia 'release' per l'ultima stabile)"
       required: false
       default: release
     - name: DB_PASSWORD
       generate: password
-      description: "PostgreSQL password"
+      description:
+        en: "PostgreSQL password"
+        it: "Password di PostgreSQL"
       sensitive: true
       required: true
       default: immich_password
     - name: DB_USERNAME
-      description: "PostgreSQL username"
+      description:
+        en: "PostgreSQL username"
+        it: "Utente di PostgreSQL"
       required: true
       default: postgres
     - name: DB_DATABASE_NAME
-      description: "PostgreSQL database name"
+      description:
+        en: "PostgreSQL database name"
+        it: "Nome del database PostgreSQL"
       required: true
       default: immich
   volumes:
     - container: /data
-      description: "Path on host where photos and videos will be stored"
+      description:
+        en: "Path on host where photos and videos will be stored"
+        it: "Cartella dell'host in cui salvare foto e video"
       required: true
       default: /var/lib/immich/upload
     - container: /var/lib/postgresql/data
-      description: "Path on host for the PostgreSQL database"
+      description:
+        en: "Path on host for the PostgreSQL database"
+        it: "Cartella dell'host per il database PostgreSQL"
       required: true
       default: /var/lib/immich/db
     - container: /cache
-      description: "Path on host for ML model cache (face recognition, CLIP) — only used when ML is enabled"
+      description:
+        en: "Path on host for ML model cache (face recognition, CLIP) — only used when ML is enabled"
+        it: "Cartella dell'host per la cache dei modelli ML (riconoscimento volti, CLIP), usata solo con il ML attivo"
       required: false
       default: /var/lib/immich/model-cache
   features:
     - id: enable_ml
       name: "Machine Learning"
-      description: "Enable the machine-learning container for face recognition and CLIP-based smart search. Disable to save resources."
+      description:
+        en: "Enable the machine-learning container for face recognition and CLIP-based smart search. Disable to save resources."
+        it: "Attiva il container di machine learning per il riconoscimento dei volti e la ricerca intelligente CLIP. Disattivalo per risparmiare risorse."
       default: true
     - id: ml_accel
       requires: enable_ml
       name: "ML Hardware Acceleration"
-      description: "Hardware accelerator for machine learning (face recognition, CLIP search). Choose the option that matches your hardware."
+      description:
+        en: "Hardware accelerator for machine learning (face recognition, CLIP search). Choose the option that matches your hardware."
+        it: "Acceleratore hardware per il machine learning (riconoscimento volti, ricerca CLIP). Scegli l'opzione adatta al tuo hardware."
       type: select
       default: none
       options:
         - value: none
-          label: "CPU only"
-          description: "No hardware acceleration — compatible with all systems, higher CPU usage."
+          label:
+            en: "CPU only"
+            it: "Solo CPU"
+          description:
+            en: "No hardware acceleration — compatible with all systems, higher CPU usage."
+            it: "Nessuna accelerazione hardware: compatibile con tutti i sistemi, più carico sulla CPU."
         - value: openvino
           requires_hw: [dri]
           label: "Intel OpenVINO"
-          description: "For Intel CPUs, integrated GPUs and NPUs. Passes /dev/dri to the container (VAAPI). Works on most modern Intel systems."
+          description:
+            en: "For Intel CPUs, integrated GPUs and NPUs. Passes /dev/dri to the container (VAAPI). Works on most modern Intel systems."
+            it: "Per CPU, GPU integrate e NPU Intel. Passa /dev/dri al container (VAAPI). Funziona sulla maggior parte dei sistemi Intel recenti."
           image_tag_suffix: "-openvino"
         - value: cuda
           requires_hw: [nvidia]
           label: "NVIDIA CUDA"
-          description: "For NVIDIA GPUs. Requires nvidia-container-toolkit installed on the host."
+          description:
+            en: "For NVIDIA GPUs. Requires nvidia-container-toolkit installed on the host."
+            it: "Per GPU NVIDIA. Richiede nvidia-container-toolkit installato sull'host."
           image_tag_suffix: "-cuda"
           env:
             - name: NVIDIA_VISIBLE_DEVICES
-              description: "Which NVIDIA GPUs to expose to the container"
+              description:
+                en: "Which NVIDIA GPUs to expose to the container"
+                it: "GPU NVIDIA da rendere disponibili al container"
               required: true
               default: all
-              hint: "'all' exposes every GPU. For a specific GPU use its UUID from: nvidia-smi -L"
+              hint:
+                en: "'all' exposes every GPU. For a specific GPU use its UUID from: nvidia-smi -L"
+                it: "'all' rende disponibili tutte le GPU. Per una sola, usa il suo UUID da: nvidia-smi -L"
             - name: NVIDIA_DRIVER_CAPABILITIES
-              description: "NVIDIA driver capabilities passed to the container"
+              description:
+                en: "NVIDIA driver capabilities passed to the container"
+                it: "Funzioni del driver NVIDIA passate al container"
               required: false
               default: "compute,video,utility"
         - value: rocm
           requires_hw: [kfd, dri]
           label: "AMD ROCm"
-          description: "For AMD GPUs (RX 6000+ series). Passes /dev/dri and /dev/kfd to the container."
+          description:
+            en: "For AMD GPUs (RX 6000+ series). Passes /dev/dri and /dev/kfd to the container."
+            it: "Per GPU AMD (serie RX 6000 e successive). Passa /dev/dri e /dev/kfd al container."
           image_tag_suffix: "-rocm"
         - value: armnn
           label: "ARM NN"
-          description: "For ARM-based devices (Raspberry Pi 5, Orange Pi, etc.)."
+          description:
+            en: "For ARM-based devices (Raspberry Pi 5, Orange Pi, etc.)."
+            it: "Per dispositivi ARM (Raspberry Pi 5, Orange Pi, ecc.)."
           image_tag_suffix: "-armnn"
         - value: rknn
           label: "Rockchip RKNN"
-          description: "For Rockchip SoCs (RK3588, RK3566, etc.). Passes /dev/dri and USB devices."
+          description:
+            en: "For Rockchip SoCs (RK3588, RK3566, etc.). Passes /dev/dri and USB devices."
+            it: "Per SoC Rockchip (RK3588, RK3566, ecc.). Passa /dev/dri e i dispositivi USB."
           image_tag_suffix: "-rknn"
     - id: hw_transcode
       name: "Hardware Video Transcoding"
-      description: "Use GPU hardware for video transcoding in immich-server. Independent from ML acceleration."
+      description:
+        en: "Use GPU hardware for video transcoding in immich-server. Independent from ML acceleration."
+        it: "Usa la GPU per la transcodifica video in immich-server. Indipendente dall'accelerazione ML."
       type: select
       default: none
       options:
         - value: none
-          label: "CPU only"
-          description: "Software transcoding — works on all hardware, higher CPU usage."
+          label:
+            en: "CPU only"
+            it: "Solo CPU"
+          description:
+            en: "Software transcoding — works on all hardware, higher CPU usage."
+            it: "Transcodifica software: funziona con qualsiasi hardware, più carico sulla CPU."
         - value: vaapi
           requires_hw: [dri]
           label: "Intel / AMD VAAPI"
-          description: "Hardware transcoding for Intel iGPUs and AMD GPUs. Passes /dev/dri to immich-server."
+          description:
+            en: "Hardware transcoding for Intel iGPUs and AMD GPUs. Passes /dev/dri to immich-server."
+            it: "Transcodifica hardware per iGPU Intel e GPU AMD. Passa /dev/dri a immich-server."
         - value: nvenc
           requires_hw: [nvidia]
           label: "NVIDIA NVENC"
-          description: "Hardware transcoding for NVIDIA GPUs. Requires nvidia-container-toolkit on the host."
+          description:
+            en: "Hardware transcoding for NVIDIA GPUs. Requires nvidia-container-toolkit on the host."
+            it: "Transcodifica hardware per GPU NVIDIA. Richiede nvidia-container-toolkit sull'host."
           env:
             - name: NVIDIA_VISIBLE_DEVICES
-              description: "Which NVIDIA GPUs to expose (for transcoding)"
+              description:
+                en: "Which NVIDIA GPUs to expose (for transcoding)"
+                it: "GPU NVIDIA da rendere disponibili (per la transcodifica)"
               required: true
               default: all
-              hint: "'all' exposes every GPU. For a specific GPU use its UUID from: nvidia-smi -L"
+              hint:
+                en: "'all' exposes every GPU. For a specific GPU use its UUID from: nvidia-smi -L"
+                it: "'all' rende disponibili tutte le GPU. Per una sola, usa il suo UUID da: nvidia-smi -L"
             - name: NVIDIA_DRIVER_CAPABILITIES
-              description: "NVIDIA driver capabilities passed to the container"
+              description:
+                en: "NVIDIA driver capabilities passed to the container"
+                it: "Funzioni del driver NVIDIA passate al container"
               required: false
               default: "compute,video,utility"
 

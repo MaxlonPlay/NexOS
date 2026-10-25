@@ -36,13 +36,17 @@ x-nexos:
       it: "Accedi con guacadmin / guacadmin e cambia subito la password."
   env:
     - name: HOST_PORT
-      description: Host port for the Guacamole web interface
+      description:
+        en: "Host port for the Guacamole web interface"
+        it: "Porta dell'host per l'interfaccia web di Guacamole"
       required: true
       default: "8080"
       type: port
     - name: TZ
       detect: timezone
-      description: Server timezone
+      description:
+        en: "Server timezone"
+        it: "Fuso orario del server"
       required: false
       default: Europe/Rome
   features:
@@ -56,7 +60,9 @@ x-nexos:
       default: false
   volumes:
     - container: /config
-      description: Guacamole configuration, database and extensions
+      description:
+        en: "Guacamole configuration, database and extensions"
+        it: "Configurazione, database ed estensioni di Guacamole"
       required: true
 
 services:

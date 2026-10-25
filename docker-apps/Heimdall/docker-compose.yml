@@ -35,33 +35,45 @@ x-nexos:
   env:
     - name: PUID
       gid_var: PGID
-      description: User ID for file permissions
+      description:
+        en: "User ID for file permissions"
+        it: "Utente proprietario dei file"
       required: false
       default: "1000"
       type: user
     - name: PGID
-      description: Group ID for file permissions
+      description:
+        en: "Group ID for file permissions"
+        it: "Gruppo proprietario dei file"
       required: false
       default: "1000"
       type: number
     - name: TZ
       detect: timezone
-      description: Timezone
+      description:
+        en: "Timezone"
+        it: "Fuso orario"
       required: false
       default: Europe/Rome
     - name: HTTP_PORT
-      description: HTTP port exposed on the host
+      description:
+        en: "HTTP port exposed on the host"
+        it: "Porta HTTP pubblicata sull'host"
       required: true
       default: "80"
       type: port
     - name: HTTPS_PORT
-      description: HTTPS port exposed on the host
+      description:
+        en: "HTTPS port exposed on the host"
+        it: "Porta HTTPS pubblicata sull'host"
       required: true
       default: "443"
       type: port
   volumes:
     - container: /config
-      description: Heimdall configuration and database
+      description:
+        en: "Heimdall configuration and database"
+        it: "Configurazione e database di Heimdall"
       required: true
       default: /var/lib/heimdall/config
 

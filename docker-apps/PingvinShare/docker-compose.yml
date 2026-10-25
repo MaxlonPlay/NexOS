@@ -35,16 +35,22 @@ x-nexos:
     path: /
   env:
     - name: HOST_PORT
-      description: Host port for the Pingvin Share web interface
+      description:
+        en: "Host port for the Pingvin Share web interface"
+        it: "Porta dell'host per l'interfaccia web di Pingvin Share"
       required: true
       default: "3000"
       type: port
     - name: DATA_PATH
-      description: Host directory where all Pingvin data and uploads will be stored
+      description:
+        en: "Host directory where all Pingvin data and uploads will be stored"
+        it: "Cartella dell'host per tutti i dati e i caricamenti di Pingvin"
       required: true
       path: true
       default: /var/lib/pingvin
-      hint: "A /images subdirectory is created automatically inside this folder"
+      hint:
+        en: "A /images subdirectory is created automatically inside this folder"
+        it: "Al suo interno viene creata automaticamente la sottocartella /images"
   features:
     - id: reverse_proxy
       name:

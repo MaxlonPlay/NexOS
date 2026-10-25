@@ -36,24 +36,38 @@ x-nexos:
     path: /
   env:
     - name: AIO_HTTP_PORT
-      description: Port for the AIO admin interface
+      description:
+        en: "Port for the AIO admin interface"
+        it: "Porta dell'interfaccia di amministrazione AIO"
       required: true
       default: "8080"
       type: port
     - name: APACHE_PORT
-      description: Port on which Nextcloud is exposed by Apache
-      hint: Must be free on the host. Usually 11000 or any high port of your choice.
+      description:
+        en: "Port on which Nextcloud is exposed by Apache"
+        it: "Porta su cui Apache pubblica Nextcloud"
+      hint:
+        en: "Must be free on the host. Usually 11000 or any high port of your choice."
+        it: "Deve essere libera sull'host. Di solito 11000 o un'altra porta alta a tua scelta."
       required: true
       default: "11000"
       type: port
     - name: NEXTCLOUD_CONFIG_DIR
-      description: Host folder for Nextcloud AIO configuration
-      hint: "E.g. /opt/nextcloud/config — must exist before starting."
+      description:
+        en: "Host folder for Nextcloud AIO configuration"
+        it: "Cartella dell'host per la configurazione di Nextcloud AIO"
+      hint:
+        en: "E.g. /opt/nextcloud/config — must exist before starting."
+        it: "Es. /opt/nextcloud/config; deve esistere prima dell'avvio."
       path: true
       required: true
     - name: NEXTCLOUD_DATADIR
-      description: Host folder where Nextcloud stores user files
-      hint: "Choose a folder on a large disk. E.g. /mnt/storage/nextcloud/data"
+      description:
+        en: "Host folder where Nextcloud stores user files"
+        it: "Cartella dell'host in cui Nextcloud salva i file degli utenti"
+      hint:
+        en: "Choose a folder on a large disk. E.g. /mnt/storage/nextcloud/data"
+        it: "Scegli una cartella su un disco capiente. Es. /mnt/storage/nextcloud/data"
       path: true
       required: true
 

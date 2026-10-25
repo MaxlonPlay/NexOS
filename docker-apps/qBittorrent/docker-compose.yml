@@ -34,13 +34,19 @@ x-nexos:
     - arm/v7
   ports:
     - port: 8080
-      description: Web interface
+      description:
+        en: "Web interface"
+        it: "Interfaccia web"
       protocol: tcp
     - port: 6881
-      description: BitTorrent peer connections (TCP)
+      description:
+        en: "BitTorrent peer connections (TCP)"
+        it: "Connessioni BitTorrent con i peer (TCP)"
       protocol: tcp
     - port: 6881
-      description: BitTorrent peer connections (UDP)
+      description:
+        en: "BitTorrent peer connections (UDP)"
+        it: "Connessioni BitTorrent con i peer (UDP)"
       protocol: udp
   website: https://www.qbittorrent.org
   repo: https://github.com/qbittorrent/qBittorrent
@@ -56,41 +62,55 @@ x-nexos:
       it: "La password temporanea di admin è nel log del container: cambiala in Strumenti → Opzioni → Interfaccia web."
   env:
     - name: HOST_PORT
-      description: Host port for the qBittorrent web interface
+      description:
+        en: "Host port for the qBittorrent web interface"
+        it: "Porta dell'host per l'interfaccia web di qBittorrent"
       required: true
       default: "8080"
       type: port
     - name: PEERPORT
-      description: BitTorrent peer port for incoming connections (TCP and UDP)
-      hint: |
-        Open this port on your firewall and forward it on your router for the best connectivity.
-        The same value is applied both to the qBittorrent setting and the host port mapping.
+      description:
+        en: "BitTorrent peer port for incoming connections (TCP and UDP)"
+        it: "Porta BitTorrent per le connessioni in ingresso (TCP e UDP)"
+      hint:
+        en: "Open this port on your firewall and forward it on your router for the best connectivity.\nThe same value is applied both to the qBittorrent setting and the host port mapping."
+        it: "Apri questa porta sul firewall e inoltrala sul router per la migliore connettività.\nLo stesso valore vale per l'impostazione di qBittorrent e per la porta pubblicata sull'host."
       required: true
       default: "6881"
       type: port
     - name: PUID
       gid_var: PGID
-      description: UID of the user that owns your download files
+      description:
+        en: "UID of the user that owns your download files"
+        it: "Utente proprietario dei file scaricati"
       required: false
       default: "1000"
       type: user
     - name: PGID
-      description: GID of the user that owns your download files
+      description:
+        en: "GID of the user that owns your download files"
+        it: "Gruppo proprietario dei file scaricati"
       required: false
       default: "1000"
       type: number
     - name: TZ
       detect: timezone
-      description: Timezone
+      description:
+        en: "Timezone"
+        it: "Fuso orario"
       required: false
       default: Europe/Rome
-      placeholder: Europe/Rome
+      placeholder: "Europe/Rome"
   volumes:
     - container: /config
-      description: qBittorrent configuration, settings and session files
+      description:
+        en: "qBittorrent configuration, settings and session files"
+        it: "Configurazione, impostazioni e file di sessione di qBittorrent"
       required: true
     - container: /downloads
-      description: Directory where completed and in-progress downloads are stored
+      description:
+        en: "Directory where completed and in-progress downloads are stored"
+        it: "Cartella dei download completati e in corso"
       required: true
 
 services:

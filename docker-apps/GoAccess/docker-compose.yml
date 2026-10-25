@@ -37,51 +37,73 @@ x-nexos:
   env:
     - name: TZ
       detect: timezone
-      description: Timezone
+      description:
+        en: "Timezone"
+        it: "Fuso orario"
       required: false
       default: Europe/Rome
     - name: PORT
-      description: Host port for the GoAccess web dashboard
+      description:
+        en: "Host port for the GoAccess web dashboard"
+        it: "Porta dell'host per la dashboard web di GoAccess"
       required: true
       default: "7880"
       type: port
     - name: BASIC_AUTH_USERNAME
-      description: Username for the web dashboard
+      description:
+        en: "Username for the web dashboard"
+        it: "Nome utente della dashboard web"
       required: true
       default: admin
     - name: BASIC_AUTH_PASSWORD
       generate: password
-      description: Password for the web dashboard
+      description:
+        en: "Password for the web dashboard"
+        it: "Password della dashboard web"
       required: true
       sensitive: true
     - name: EXCLUDE_IPS
-      description: Comma-separated IPs to exclude from reports (e.g. your LAN)
+      description:
+        en: "Comma-separated IPs to exclude from reports (e.g. your LAN)"
+        it: "IP da escludere dai report, separati da virgola (es. la tua LAN)"
       required: false
       default: "127.0.0.1"
-      hint: "Example: 127.0.0.1,192.168.1.1"
+      hint:
+        en: "Example: 127.0.0.1,192.168.1.1"
+        it: "Esempio: 127.0.0.1,192.168.1.1"
     - name: HTML_REFRESH
-      description: Auto-refresh interval for the HTML report (seconds)
+      description:
+        en: "Auto-refresh interval for the HTML report (seconds)"
+        it: "Intervallo di aggiornamento del report HTML (secondi)"
       required: false
       default: "5"
       type: number
       min: 1
     - name: KEEP_LAST
-      description: Number of days to keep in storage
+      description:
+        en: "Number of days to keep in storage"
+        it: "Giorni da conservare"
       required: false
       default: "15"
       type: number
       min: 1
     - name: PROCESSING_THREADS
-      description: Number of log processing threads (set to number of CPU cores)
+      description:
+        en: "Number of log processing threads (set to number of CPU cores)"
+        it: "Thread di elaborazione dei log (pari ai core della CPU)"
       required: false
       default: "1"
       type: number
       min: 1
   volumes:
     - container: /opt/log
-      description: "Nginx Proxy Manager logs directory (the 'logs' folder inside your NPM data path)"
+      description:
+        en: "Nginx Proxy Manager logs directory (the 'logs' folder inside your NPM data path)"
+        it: "Cartella dei log di Nginx Proxy Manager (la cartella 'logs' nei dati di NPM)"
       required: true
-      hint: "Typically: /your/npm/data/logs"
+      hint:
+        en: "Typically: /your/npm/data/logs"
+        it: "Di solito: /percorso/dati/npm/logs"
 
 services:
   goaccess:

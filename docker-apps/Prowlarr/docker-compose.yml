@@ -36,30 +36,40 @@ x-nexos:
     path: /
   env:
     - name: HOST_PORT
-      description: Host port to expose Prowlarr on
+      description:
+        en: "Host port to expose Prowlarr on"
+        it: "Porta dell'host su cui pubblicare Prowlarr"
       required: true
       default: "9696"
       type: port
     - name: PUID
       gid_var: PGID
-      description: User ID to run the process as
+      description:
+        en: "User ID to run the process as"
+        it: "Utente con cui eseguire il processo"
       required: false
       default: "1000"
       type: user
     - name: PGID
-      description: Group ID to run the process as
+      description:
+        en: "Group ID to run the process as"
+        it: "Gruppo con cui eseguire il processo"
       required: false
       default: "1000"
       type: number
     - name: TZ
       detect: timezone
-      description: Timezone (e.g. Europe/Rome)
+      description:
+        en: "Timezone (e.g. Europe/Rome)"
+        it: "Fuso orario (es. Europe/Rome)"
       required: false
       default: Europe/Rome
-      placeholder: Europe/Rome
+      placeholder: "Europe/Rome"
   volumes:
     - container: /config
-      description: Prowlarr configuration and database
+      description:
+        en: "Prowlarr configuration and database"
+        it: "Configurazione e database di Prowlarr"
       required: true
 
 name: prowlarr

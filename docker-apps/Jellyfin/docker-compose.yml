@@ -31,13 +31,19 @@ x-nexos:
     - arm64
   ports:
     - port: 8096
-      description: Web interface / API
+      description:
+        en: "Web interface / API"
+        it: "Interfaccia web / API"
       protocol: tcp
     - port: 7359
-      description: Client auto-discovery
+      description:
+        en: "Client auto-discovery"
+        it: "Rilevamento automatico dei client"
       protocol: udp
     - port: 1900
-      description: DLNA server discovery
+      description:
+        en: "DLNA server discovery"
+        it: "Rilevamento del server DLNA"
       protocol: udp
   website: https://jellyfin.org
   repo: https://github.com/jellyfin/jellyfin
@@ -49,32 +55,42 @@ x-nexos:
     path: /
   env:
     - name: HOST_PORT
-      description: Host port for the Jellyfin web interface
+      description:
+        en: "Host port for the Jellyfin web interface"
+        it: "Porta dell'host per l'interfaccia web di Jellyfin"
       required: true
       default: "8096"
       type: port
     - name: PUID
       gid_var: PGID
-      description: UID of the user that owns your media files
+      description:
+        en: "UID of the user that owns your media files"
+        it: "Utente proprietario dei file multimediali"
       required: false
       default: "1000"
       type: user
     - name: PGID
-      description: GID of the user that owns your media files
+      description:
+        en: "GID of the user that owns your media files"
+        it: "Gruppo proprietario dei file multimediali"
       required: false
       default: "1000"
       type: number
     - name: TZ
       detect: timezone
-      description: Timezone (e.g. Europe/Rome)
+      description:
+        en: "Timezone (e.g. Europe/Rome)"
+        it: "Fuso orario (es. Europe/Rome)"
       required: false
       default: Europe/Rome
-      placeholder: Europe/Rome
+      placeholder: "Europe/Rome"
     - name: JELLYFIN_PublishedServerUrl
-      description: Public URL shown to clients — needed only behind a reverse proxy
+      description:
+        en: "Public URL shown to clients — needed only behind a reverse proxy"
+        it: "URL pubblico mostrato ai client, necessario solo dietro un reverse proxy"
       type: url
       required: false
-      placeholder: https://jellyfin.yourdomain.com
+      placeholder: "https://jellyfin.yourdomain.com"
   features:
     - id: hw_accel_igpu
       requires_hw: [dri]
@@ -87,7 +103,9 @@ x-nexos:
       default: false
       env:
         - name: GPU_TYPE
-          description: Your GPU brand — determines which codec to enable in Jellyfin admin
+          description:
+            en: "Your GPU brand — determines which codec to enable in Jellyfin admin"
+            it: "Marca della GPU: indica quale codec attivare nell'amministrazione di Jellyfin"
           type: select
           options:
             - Intel — Quick Sync (QSV)
@@ -97,7 +115,9 @@ x-nexos:
           default: Intel — Quick Sync (QSV)
         - name: RENDER_GID
           detect: render_gid
-          description: GID of the 'render' group on the host
+          description:
+            en: "GID of the 'render' group on the host"
+            it: "GID del gruppo 'render' sull'host"
           required: true
           default: "103"
           type: number
@@ -112,32 +132,48 @@ x-nexos:
       default: false
       env:
         - name: NVIDIA_VISIBLE_DEVICES
-          description: Which NVIDIA GPUs to expose to the container
+          description:
+            en: "Which NVIDIA GPUs to expose to the container"
+            it: "GPU NVIDIA da rendere disponibili al container"
           required: true
           default: "all"
-          hint: |
-            'all' exposes every GPU. For a specific GPU use its UUID:
-              nvidia-smi -L
+          hint:
+            en: "'all' exposes every GPU. For a specific GPU use its UUID:\n  nvidia-smi -L"
+            it: "'all' rende disponibili tutte le GPU. Per una sola, usa il suo UUID:\n  nvidia-smi -L"
         - name: NVIDIA_DRIVER_CAPABILITIES
-          description: NVIDIA driver capabilities passed to the container
+          description:
+            en: "NVIDIA driver capabilities passed to the container"
+            it: "Funzioni del driver NVIDIA passate al container"
           required: false
           default: "compute,video,utility"
   volumes:
     - container: /config
-      description: Jellyfin configuration, metadata and database
+      description:
+        en: "Jellyfin configuration, metadata and database"
+        it: "Configurazione, metadati e database di Jellyfin"
       required: true
     - container: /cache
-      description: Transcoding and image cache directory
+      description:
+        en: "Transcoding and image cache directory"
+        it: "Cartella per la cache di transcodifica e immagini"
       required: true
   media_volumes:
-    hint: "Add one path per library. Left = folder on your server, Right = folder inside the container (mounted read-only). You can add a single /multimedia or split into /movies, /tv, /music — your choice."
+    hint:
+      en: "Add one path per library. Left = folder on your server, Right = folder inside the container (mounted read-only). You can add a single /multimedia or split into /movies, /tv, /music — your choice."
+      it: "Aggiungi un percorso per libreria. A sinistra la cartella sul server, a destra quella nel container (in sola lettura). Puoi aggiungere un'unica /multimedia oppure dividere in /movies, /tv, /music."
     suggestions:
       - container: /movies
-        label: Movies
+        label:
+          en: "Movies"
+          it: "Film"
       - container: /tv
-        label: TV Shows
+        label:
+          en: "TV Shows"
+          it: "Serie TV"
       - container: /music
-        label: Music
+        label:
+          en: "Music"
+          it: "Musica"
 
 services:
   jellyfin:

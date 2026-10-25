@@ -44,58 +44,79 @@ x-nexos:
       it: "Interfacce web: qBittorrent sulla porta {QBIT_PORT}, Sonarr {SONARR_PORT}, Radarr {RADARR_PORT}, Prowlarr {PROWLARR_PORT}."
   env:
     - name: VPN_SERVICE_PROVIDER
-      description: VPN provider name
+      description:
+        en: "VPN provider name"
+        it: "Nome del fornitore VPN"
       required: true
       default: protonvpn
-      hint: |
-        Examples: protonvpn, mullvad, nordvpn, expressvpn, surfshark, private internet access
-        Full list: https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers
+      hint:
+        en: "Examples: protonvpn, mullvad, nordvpn, expressvpn, surfshark, private internet access\nFull list: https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers"
+        it: "Esempi: protonvpn, mullvad, nordvpn, expressvpn, surfshark, private internet access\nElenco completo: https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers"
     - name: SERVER_COUNTRIES
-      description: VPN server country (comma-separated for multiple)
+      description:
+        en: "VPN server country (comma-separated for multiple)"
+        it: "Paese del server VPN (più paesi separati da virgola)"
       required: false
       default: Netherlands
-      hint: "Examples: Netherlands — Switzerland — \"Netherlands,Switzerland\""
+      hint:
+        en: "Examples: Netherlands — Switzerland — \"Netherlands,Switzerland\""
+        it: "Esempi: Netherlands — Switzerland — \"Netherlands,Switzerland\""
     - name: TZ
       detect: timezone
-      description: Timezone for all services
+      description:
+        en: "Timezone for all services"
+        it: "Fuso orario di tutti i servizi"
       required: false
       default: Europe/Rome
     - name: PUID
       gid_var: PGID
-      description: User ID for file permissions
+      description:
+        en: "User ID for file permissions"
+        it: "Utente proprietario dei file"
       required: false
       default: "1000"
       type: user
     - name: PGID
-      description: Group ID for file permissions
+      description:
+        en: "Group ID for file permissions"
+        it: "Gruppo proprietario dei file"
       required: false
       default: "1000"
       type: number
     - name: CONFIG_BASE
-      description: Host base directory for all service configs
+      description:
+        en: "Host base directory for all service configs"
+        it: "Cartella base dell'host per le configurazioni di tutti i servizi"
       required: true
       path: true
-      hint: |
-        A subdirectory is created per service automatically.
-        Example: /mnt/data/arr-stack
-        → /mnt/data/arr-stack/qbittorrent, /mnt/data/arr-stack/sonarr, etc.
+      hint:
+        en: "A subdirectory is created per service automatically.\nExample: /mnt/data/arr-stack\n→ /mnt/data/arr-stack/qbittorrent, /mnt/data/arr-stack/sonarr, etc."
+        it: "Per ogni servizio viene creata automaticamente una sottocartella.\nEsempio: /mnt/data/arr-stack\n→ /mnt/data/arr-stack/qbittorrent, /mnt/data/arr-stack/sonarr, ecc."
     - name: QBIT_PORT
-      description: qBittorrent web UI port
+      description:
+        en: "qBittorrent web UI port"
+        it: "Porta dell'interfaccia web di qBittorrent"
       required: true
       default: "8080"
       type: port
     - name: SONARR_PORT
-      description: Sonarr web UI port
+      description:
+        en: "Sonarr web UI port"
+        it: "Porta dell'interfaccia web di Sonarr"
       required: true
       default: "8989"
       type: port
     - name: RADARR_PORT
-      description: Radarr web UI port
+      description:
+        en: "Radarr web UI port"
+        it: "Porta dell'interfaccia web di Radarr"
       required: true
       default: "7878"
       type: port
     - name: PROWLARR_PORT
-      description: Prowlarr web UI port
+      description:
+        en: "Prowlarr web UI port"
+        it: "Porta dell'interfaccia web di Prowlarr"
       required: true
       default: "9696"
       type: port
@@ -112,7 +133,7 @@ x-nexos:
       env_var: VPN_TYPE
       options:
         - value: wireguard
-          label: WireGuard
+          label: "WireGuard"
           description:
             en: Faster and more modern. Requires a WireGuard private key from your provider dashboard.
             it: Più veloce e moderno. Richiede una chiave privata WireGuard dal pannello del provider.
@@ -128,9 +149,11 @@ x-nexos:
                 en: Assigned WireGuard IP — required by some providers (e.g. Mullvad, AzireVPN)
                 it: IP WireGuard assegnato — richiesto da alcuni provider (es. Mullvad, AzireVPN)
               required: false
-              hint: "Format: 10.x.x.x/32 — leave empty for ProtonVPN"
+              hint:
+                en: "Format: 10.x.x.x/32 — leave empty for ProtonVPN"
+                it: "Formato: 10.x.x.x/32; lascia vuoto per ProtonVPN"
         - value: openvpn
-          label: OpenVPN
+          label: "OpenVPN"
           description:
             en: More compatible. Requires username and password from your provider dashboard.
             it: Più compatibile. Richiede username e password dal pannello del provider.
@@ -141,7 +164,9 @@ x-nexos:
                 it: Username OpenVPN (dal pannello del provider)
               required: true
             - name: OPENVPN_PASSWORD
-              description: OpenVPN password
+              description:
+                en: "OpenVPN password"
+                it: "Password OpenVPN"
               required: true
               sensitive: true
     - id: port_forwarding
@@ -162,7 +187,9 @@ x-nexos:
       default: true
       env:
         - name: SEERR_PORT
-          description: Seerr web UI port
+          description:
+            en: "Seerr web UI port"
+            it: "Porta dell'interfaccia web di Seerr"
           required: true
           default: "5055"
           type: port
@@ -176,27 +203,39 @@ x-nexos:
       default: false
       env:
         - name: FIREFOX_PORT_1
-          description: Firefox primary web UI port
+          description:
+            en: "Firefox primary web UI port"
+            it: "Porta principale dell'interfaccia web di Firefox"
           required: true
           default: "3000"
           type: port
         - name: FIREFOX_PORT_2
-          description: Firefox secondary web UI port
+          description:
+            en: "Firefox secondary web UI port"
+            it: "Porta secondaria dell'interfaccia web di Firefox"
           required: true
           default: "3001"
           type: port
   volumes:
     - container: /gluetun
-      description: Gluetun VPN data, credentials and server lists
+      description:
+        en: "Gluetun VPN data, credentials and server lists"
+        it: "Dati, credenziali ed elenchi dei server della VPN Gluetun"
       required: true
     - container: /downloads
-      description: Download directory — shared between qBittorrent, Sonarr and Radarr
+      description:
+        en: "Download directory — shared between qBittorrent, Sonarr and Radarr"
+        it: "Cartella dei download, condivisa tra qBittorrent, Sonarr e Radarr"
       required: true
     - container: /movies
-      description: Movies library (Radarr)
+      description:
+        en: "Movies library (Radarr)"
+        it: "Libreria dei film (Radarr)"
       required: true
     - container: /tv
-      description: TV shows library (Sonarr)
+      description:
+        en: "TV shows library (Sonarr)"
+        it: "Libreria delle serie TV (Sonarr)"
       required: true
 
 services:

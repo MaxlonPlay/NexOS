@@ -28,13 +28,19 @@ x-nexos:
     - arm/v7
   ports:
     - port: 9091
-      description: Web interface
+      description:
+        en: "Web interface"
+        it: "Interfaccia web"
       protocol: tcp
     - port: 51413
-      description: BitTorrent peer connections (TCP)
+      description:
+        en: "BitTorrent peer connections (TCP)"
+        it: "Connessioni BitTorrent con i peer (TCP)"
       protocol: tcp
     - port: 51413
-      description: BitTorrent peer connections (UDP)
+      description:
+        en: "BitTorrent peer connections (UDP)"
+        it: "Connessioni BitTorrent con i peer (UDP)"
       protocol: udp
   website: https://transmissionbt.com
   repo: https://github.com/transmission/transmission
@@ -46,52 +52,72 @@ x-nexos:
     path: /
   env:
     - name: HOST_PORT
-      description: Host port for the Transmission web interface
+      description:
+        en: "Host port for the Transmission web interface"
+        it: "Porta dell'host per l'interfaccia web di Transmission"
       required: true
       default: "9091"
       type: port
     - name: PEERPORT
-      description: BitTorrent peer port used for incoming connections (TCP and UDP)
-      hint: |
-        Open this port on your firewall and forward it on your router for the best connectivity.
-        The same value is applied both to the Transmission setting and the host port mapping.
+      description:
+        en: "BitTorrent peer port used for incoming connections (TCP and UDP)"
+        it: "Porta BitTorrent per le connessioni in ingresso (TCP e UDP)"
+      hint:
+        en: "Open this port on your firewall and forward it on your router for the best connectivity.\nThe same value is applied both to the Transmission setting and the host port mapping."
+        it: "Apri questa porta sul firewall e inoltrala sul router per la migliore connettività.\nLo stesso valore vale per l'impostazione di Transmission e per la porta pubblicata sull'host."
       required: true
       default: "51413"
       type: port
     - name: PUID
       gid_var: PGID
-      description: UID of the user that owns your download files
+      description:
+        en: "UID of the user that owns your download files"
+        it: "Utente proprietario dei file scaricati"
       required: false
       default: "1000"
       type: user
     - name: PGID
-      description: GID of the user that owns your download files
+      description:
+        en: "GID of the user that owns your download files"
+        it: "Gruppo proprietario dei file scaricati"
       required: false
       default: "1000"
       type: number
     - name: TZ
       detect: timezone
-      description: Timezone
+      description:
+        en: "Timezone"
+        it: "Fuso orario"
       required: false
       default: Europe/Rome
-      placeholder: Europe/Rome
+      placeholder: "Europe/Rome"
     - name: USER
-      description: Username for the web interface (leave empty to disable authentication)
+      description:
+        en: "Username for the web interface (leave empty to disable authentication)"
+        it: "Nome utente dell'interfaccia web (vuoto per disattivare l'autenticazione)"
       required: false
-      placeholder: admin
+      placeholder: "admin"
     - name: PASS
-      description: Password for the web interface
+      description:
+        en: "Password for the web interface"
+        it: "Password dell'interfaccia web"
       required: false
       sensitive: true
   volumes:
     - container: /config
-      description: Transmission configuration, settings and resume files
+      description:
+        en: "Transmission configuration, settings and resume files"
+        it: "Configurazione, impostazioni e file di ripresa di Transmission"
       required: true
     - container: /downloads
-      description: Directory where completed and in-progress downloads are stored
+      description:
+        en: "Directory where completed and in-progress downloads are stored"
+        it: "Cartella dei download completati e in corso"
       required: true
     - container: /watch
-      description: Watch folder — .torrent files placed here are added automatically (optional)
+      description:
+        en: "Watch folder — .torrent files placed here are added automatically (optional)"
+        it: "Cartella monitorata: i file .torrent messi qui vengono aggiunti automaticamente (facoltativa)"
       required: false
 
 services:

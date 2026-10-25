@@ -48,67 +48,92 @@ x-nexos:
       it: "Accedi con {PAPERLESS_ADMIN_USER} / {PAPERLESS_ADMIN_PASSWORD}."
   env:
     - name: HOST_PORT
-      description: Host port for the Paperless web interface
+      description:
+        en: "Host port for the Paperless web interface"
+        it: "Porta dell'host per l'interfaccia web di Paperless"
       required: true
       default: "80"
       type: port
     - name: TZ
       detect: timezone
-      description: Timezone
+      description:
+        en: "Timezone"
+        it: "Fuso orario"
       required: false
       default: Europe/Rome
     - name: PAPERLESS_SECRET_KEY
       generate: {type: hex, length: 32}
-      description: Secret key for session encryption — generate a random string
+      description:
+        en: "Secret key for session encryption (generated automatically)"
+        it: "Chiave segreta per la cifratura delle sessioni (generata automaticamente)"
       required: true
       sensitive: true
-      hint: "Generate with: openssl rand -hex 32"
     - name: PAPERLESS_URL
-      description: Public URL of your Paperless instance (used for links in emails)
+      description:
+        en: "Public URL of your Paperless instance (used for links in emails)"
+        it: "URL pubblico di Paperless (usato per i link nelle email)"
       required: false
       type: url
       placeholder: "https://paperless.yourdomain.com"
     - name: PAPERLESS_ADMIN_USER
-      description: Initial admin username
+      description:
+        en: "Initial admin username"
+        it: "Nome utente dell'amministratore iniziale"
       required: true
       default: admin
     - name: PAPERLESS_ADMIN_PASSWORD
       generate: password
-      description: Initial admin password
+      description:
+        en: "Initial admin password"
+        it: "Password dell'amministratore iniziale"
       required: true
       sensitive: true
     - name: PAPERLESS_OCR_LANGUAGE
-      description: Tesseract OCR language(s) — use + to combine multiple
+      description:
+        en: "Tesseract OCR language(s) — use + to combine multiple"
+        it: "Lingue dell'OCR Tesseract: usa + per combinarne più di una"
       required: false
       default: ita+eng
-      hint: |
-        Examples: eng (English), ita (Italian), deu (German), fra (French)
-        Combine: ita+eng — full list: https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html
+      hint:
+        en: "Examples: eng (English), ita (Italian), deu (German), fra (French)\nCombine: ita+eng — full list: https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html"
+        it: "Esempi: eng (inglese), ita (italiano), deu (tedesco), fra (francese)\nCombinazioni: ita+eng; elenco completo: https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html"
     - name: DB_PASSWORD
       generate: password
-      description: Internal PostgreSQL password (used only between containers)
+      description:
+        en: "Internal PostgreSQL password (used only between containers)"
+        it: "Password interna di PostgreSQL (usata solo tra i container)"
       required: true
       sensitive: true
       default: paperless_db_secret
   volumes:
     - container: /usr/src/paperless/data
-      description: Paperless application data (index, thumbnails, classifier)
+      description:
+        en: "Paperless application data (index, thumbnails, classifier)"
+        it: "Dati dell'applicazione Paperless (indice, anteprime, classificatore)"
       required: true
       default: /var/lib/paperless/data
     - container: /usr/src/paperless/media
-      description: Archived documents and originals
+      description:
+        en: "Archived documents and originals"
+        it: "Documenti archiviati e originali"
       required: true
       default: /var/lib/paperless/media
     - container: /usr/src/paperless/consume
-      description: Inbox folder — drop documents here for automatic processing
+      description:
+        en: "Inbox folder — drop documents here for automatic processing"
+        it: "Cartella di ingresso: i documenti messi qui vengono elaborati automaticamente"
       required: true
       default: /var/lib/paperless/consume
     - container: /usr/src/paperless/export
-      description: Export destination folder
+      description:
+        en: "Export destination folder"
+        it: "Cartella di destinazione delle esportazioni"
       required: false
       default: /var/lib/paperless/export
     - container: /var/lib/postgresql/data
-      description: PostgreSQL database
+      description:
+        en: "PostgreSQL database"
+        it: "Database PostgreSQL"
       required: true
       default: /var/lib/paperless/db
 

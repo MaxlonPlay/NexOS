@@ -55,22 +55,32 @@ x-nexos:
       it: "Primo accesso: admin@example.com / changeme — ti verrà chiesto di cambiarli."
   env:
     - name: ADMIN_PORT
-      description: Admin web UI port
+      description:
+        en: "Admin web UI port"
+        it: "Porta dell'interfaccia web di amministrazione"
       required: true
       default: "81"
       type: port
-      hint: "Ports 80 and 443 are fixed — they handle all proxied traffic."
+      hint:
+        en: "Ports 80 and 443 are fixed — they handle all proxied traffic."
+        it: "Le porte 80 e 443 sono fisse: gestiscono tutto il traffico del proxy."
     - name: TZ
       detect: timezone
-      description: Timezone
+      description:
+        en: "Timezone"
+        it: "Fuso orario"
       required: false
       default: Europe/Rome
   volumes:
     - container: /data
-      description: NPM database, proxy configs and managed certificates
+      description:
+        en: "NPM database, proxy configs and managed certificates"
+        it: "Database, configurazioni dei proxy e certificati di NPM"
       required: true
     - container: /etc/letsencrypt
-      description: Let's Encrypt certificates (renewed automatically)
+      description:
+        en: "Let's Encrypt certificates (renewed automatically)"
+        it: "Certificati Let's Encrypt (rinnovati automaticamente)"
       required: true
 
 services:

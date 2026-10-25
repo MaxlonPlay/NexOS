@@ -40,23 +40,31 @@ x-nexos:
       it: "Pannello di amministrazione: /admin — password {ADMIN_PASSWORD}. Conservala: non viene salvata in chiaro."
   env:
     - name: HOST_PORT
-      description: Host port to expose Vaultwarden on
+      description:
+        en: "Host port to expose Vaultwarden on"
+        it: "Porta dell'host su cui pubblicare Vaultwarden"
       required: true
       default: "6821"
       type: port
     - name: ADMIN_PASSWORD
-      description: Password for the /admin panel (only its Argon2 hash is saved)
+      description:
+        en: "Password for the /admin panel (only its Argon2 hash is saved)"
+        it: "Password del pannello /admin (viene salvato solo il suo hash Argon2)"
       required: false
       sensitive: true
       generate: password
     - name: ADMIN_TOKEN
       generate: {type: argon2, from: ADMIN_PASSWORD}
-      description: Argon2id hash of ADMIN_PASSWORD, computed automatically
+      description:
+        en: "Argon2id hash of ADMIN_PASSWORD, computed automatically"
+        it: "Hash Argon2id di ADMIN_PASSWORD, calcolato automaticamente"
       required: true
       sensitive: true
   volumes:
     - container: /data
-      description: Vaultwarden data directory (vault, attachments, database)
+      description:
+        en: "Vaultwarden data directory (vault, attachments, database)"
+        it: "Cartella dei dati di Vaultwarden (cassaforte, allegati, database)"
       required: true
 
 services:
