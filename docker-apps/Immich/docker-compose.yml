@@ -15,7 +15,7 @@ x-nexos:
   docs: https://immich.app/docs
   port: 80
   min_ram: "4GB"
-  template_version: 2
+  template_version: 3
   web:
     port: HOST_PORT
     scheme: http
@@ -97,7 +97,7 @@ x-nexos:
             en: "No hardware acceleration — compatible with all systems, higher CPU usage."
             it: "Nessuna accelerazione hardware: compatibile con tutti i sistemi, più carico sulla CPU."
         - value: openvino
-          requires_hw: [dri]
+          requires_hw: [intel_gpu]
           label: "Intel OpenVINO"
           description:
             en: "For Intel CPUs, integrated GPUs and NPUs. Passes /dev/dri to the container (VAAPI). Works on most modern Intel systems."
@@ -127,19 +127,21 @@ x-nexos:
               required: false
               default: "compute,video,utility"
         - value: rocm
-          requires_hw: [kfd, dri]
+          requires_hw: [amd_gpu, kfd]
           label: "AMD ROCm"
           description:
             en: "For AMD GPUs (RX 6000+ series). Passes /dev/dri and /dev/kfd to the container."
             it: "Per GPU AMD (serie RX 6000 e successive). Passa /dev/dri e /dev/kfd al container."
           image_tag_suffix: "-rocm"
         - value: armnn
+          requires_hw: [mali]
           label: "ARM NN"
           description:
             en: "For ARM-based devices (Raspberry Pi 5, Orange Pi, etc.)."
             it: "Per dispositivi ARM (Raspberry Pi 5, Orange Pi, ecc.)."
           image_tag_suffix: "-armnn"
         - value: rknn
+          requires_hw: [rockchip]
           label: "Rockchip RKNN"
           description:
             en: "For Rockchip SoCs (RK3588, RK3566, etc.). Passes /dev/dri and USB devices."
