@@ -37,7 +37,7 @@ x-nexos:
     - arm64
   website: https://github.com/qdm12/gluetun
   docs: https://github.com/qdm12/gluetun-wiki
-  template_version: 2
+  template_version: 3
   post_install:
     notes:
       en: "Web interfaces: qBittorrent on port {QBIT_PORT}, Sonarr {SONARR_PORT}, Radarr {RADARR_PORT}, Prowlarr {PROWLARR_PORT}."
@@ -82,7 +82,7 @@ x-nexos:
         it: "Gruppo proprietario dei file"
       required: false
       default: "1000"
-      type: number
+      type: group
     - name: CONFIG_BASE
       description:
         en: "Host base directory for all service configs"

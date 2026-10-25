@@ -27,7 +27,7 @@ x-nexos:
   website: https://heimdall.site
   repo: https://github.com/linuxserver/Heimdall
   docs: https://github.com/linuxserver/Heimdall/wiki
-  template_version: 2
+  template_version: 3
   web:
     port: HTTP_PORT
     scheme: http
@@ -47,7 +47,7 @@ x-nexos:
         it: "Gruppo proprietario dei file"
       required: false
       default: "1000"
-      type: number
+      type: group
     - name: TZ
       detect: timezone
       description:

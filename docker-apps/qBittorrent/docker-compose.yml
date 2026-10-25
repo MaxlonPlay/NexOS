@@ -51,7 +51,7 @@ x-nexos:
   website: https://www.qbittorrent.org
   repo: https://github.com/qbittorrent/qBittorrent
   docs: https://github.com/qbittorrent/qBittorrent/wiki
-  template_version: 2
+  template_version: 3
   web:
     port: HOST_PORT
     scheme: http
@@ -92,7 +92,7 @@ x-nexos:
         it: "Gruppo proprietario dei file scaricati"
       required: false
       default: "1000"
-      type: number
+      type: group
     - name: TZ
       detect: timezone
       description:

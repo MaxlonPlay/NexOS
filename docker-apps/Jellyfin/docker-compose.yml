@@ -48,7 +48,7 @@ x-nexos:
   website: https://jellyfin.org
   repo: https://github.com/jellyfin/jellyfin
   docs: https://jellyfin.org/docs
-  template_version: 2
+  template_version: 3
   web:
     port: HOST_PORT
     scheme: http
@@ -75,7 +75,7 @@ x-nexos:
         it: "Gruppo proprietario dei file multimediali"
       required: false
       default: "1000"
-      type: number
+      type: group
     - name: TZ
       detect: timezone
       description:

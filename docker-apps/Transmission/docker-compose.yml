@@ -45,7 +45,7 @@ x-nexos:
   website: https://transmissionbt.com
   repo: https://github.com/transmission/transmission
   docs: https://github.com/transmission/transmission/wiki
-  template_version: 2
+  template_version: 3
   web:
     port: HOST_PORT
     scheme: http
@@ -82,7 +82,7 @@ x-nexos:
         it: "Gruppo proprietario dei file scaricati"
       required: false
       default: "1000"
-      type: number
+      type: group
     - name: TZ
       detect: timezone
       description:
